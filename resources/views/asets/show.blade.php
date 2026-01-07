@@ -507,6 +507,8 @@
         @csrf
         @method('DELETE')
     </form>
+    {{-- Confirm Modal --}}
+    <x-notifications.confirm-modal />
 @endsection
 @push('page-scripts')
     <script>
@@ -543,15 +545,23 @@
 
         // Delete Confirmation
         function confirmDelete(url) {
-            if (confirm(
-                    '⚠️ Apakah Anda yakin ingin menghapus aset ini?\n\nTindakan ini tidak dapat dibatalkan dan akan menghapus semua data terkait aset ini.'
-                )) {
-                const form = document.getElementById('delete-form');
-                if (form) {
-                    form.action = url;
-                    form.submit();
+            // Dapatkan Alpine component
+            const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+
+            modal.show({
+                title: 'Hapus Aset',
+                message: 'Apakah Anda yakin ingin menghapus aset ini? Tindakan ini tidak dapat dibatalkan.',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                type: 'danger',
+                onConfirm: () => {
+                    const form = document.getElementById('delete-form');
+                    if (form) {
+                        form.action = url;
+                        form.submit();
+                    }
                 }
-            }
+            });
         }
 
         // Animate cards on scroll

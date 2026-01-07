@@ -16,37 +16,6 @@
             </div>
         </div>
 
-        {{-- Error Alert --}}
-        @if ($errors->any())
-            <div class="mb-6 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-red-800">Error!</h4>
-                    <ul class="list-disc list-inside text-sm text-red-700 mt-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-red-600 hover:text-red-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
         {{-- Form Card --}}
         <div class="max-w-2xl mx-auto">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
@@ -70,7 +39,7 @@
 
                 {{-- Form Body --}}
                 <div class="p-6">
-                    <form action="{{ route('users.store') }}" method="POST" class="space-y-5">
+                    <form id="create-user-form" action="{{ route('users.store') }}" method="POST" class="space-y-5">
                         @csrf
 
                         {{-- Nama Lengkap --}}
@@ -148,7 +117,7 @@
 
                         {{-- Action Buttons --}}
                         <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                            <button type="submit"
+                            <button type="button" onclick="confirmCreateUser()"
                                 class="inline-flex items-center h-10 px-6
                                        bg-gradient-to-r from-blue-600 to-blue-700
                                        text-white rounded-lg text-sm font-medium
@@ -161,8 +130,37 @@
                 </div>
             </div>
         </div>
+
+        {{-- Confirm Modal Component --}}
+        <x-notifications.confirm-modal />
     </div>
 @endsection
+
+@push('page-scripts')
+    <script>
+        function confirmCreateUser() {
+            // Selector yang lebih spesifik untuk menghindari konflik
+            const modalElement = document.querySelector('[x-data="confirmModal()"]');
+            if (!modalElement) {
+                console.error('Confirm modal not found!');
+                return;
+            }
+
+            const modal = Alpine.$data(modalElement);
+
+            modal.show({
+                title: 'Konfirmasi Tambah Pengguna',
+                message: 'Apakah Anda yakin ingin menambahkan pengguna baru dengan data yang telah diisi?',
+                confirmText: 'Ya, Tambahkan',
+                cancelText: 'Batal',
+                type: 'info',
+                onConfirm: () => {
+                    document.getElementById('create-user-form').submit();
+                }
+            });
+        }
+    </script>
+@endpush
 
 @push('page-styles')
     <style>

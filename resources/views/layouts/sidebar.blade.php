@@ -12,35 +12,41 @@
         'w-[72px]': sidebarCollapsed
     }">
 
-    {{-- Header: Logo + Toggle Button --}}
-    <div
-        class="h-16 flex items-center justify-between px-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+    {{-- Header: Logo Interaktif (Berfungsi sebagai Toggle) --}}
+    <div class="h-16 flex items-center border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white px-4"
+        :class="sidebarCollapsed ? 'justify-center' : 'justify-between'">
 
-        {{-- Logo (disembunyikan saat collapsed) --}}
-        <a href="{{ url('/') }}" class="flex items-center gap-2 transition-opacity duration-300"
-            :class="sidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'">
-            <img src="{{ asset('assets/img/backgrounds/LogoSiramda.png') }}" alt="Logo" class="h-15 w-auto">
-        </a>
-
-        {{-- Toggle Button (desktop only) --}}
+        {{-- Logo sebagai Toggle Button --}}
         <button @click="sidebarCollapsed = !sidebarCollapsed"
-            class="hidden lg:flex p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-            :class="sidebarCollapsed ? 'mx-auto' : ''">
-            <svg class="w-5 h-5 transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-            </svg>
+            class="flex items-center transition-all duration-300 hover:opacity-80 group"
+            :class="sidebarCollapsed ? 'justify-center w-full' : 'justify-start'">
+
+            {{-- ICON LOGO (DIPERBESAR) --}}
+            <img src="{{ asset('assets/img/logo/siramda-icon.png') }}" alt="Logo SIRAMDA"
+                class="transition-all duration-300 group-hover:scale-105 flex-shrink-0"
+                :class="sidebarCollapsed
+                    ?
+                    'h-12 w-12' :
+                    'h-14 w-14'">
+
+            {{-- TEKS / LOGOTYPE (IKUT DIPERBESAR SEDIKIT) --}}
+            <img src="{{ asset('assets/img/logo/siramda-text.png') }}" alt="E-SIRAMDA" class="transition-all duration-300"
+                :class="sidebarCollapsed
+                    ?
+                    'w-0 opacity-0 invisible' :
+                    'h-5 w-auto opacity-100 visible'">
         </button>
 
         {{-- Close Button (mobile only) --}}
         <button @click="sidebarOpen = false"
-            class="lg:hidden p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg">
+            class="lg:hidden p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg flex-shrink-0"
+            x-show="!sidebarCollapsed">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
     </div>
+
 
     {{-- Navigation Menu --}}
     <nav class="flex-1 px-3 py-6 space-y-2 overflow-y-auto h-[calc(100vh-4rem)]">

@@ -35,58 +35,6 @@
             </div>
         </div>
 
-        {{-- Success Alert --}}
-        @if (session('success'))
-            <div class="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <path d="M5 12l5 5l10 -10"></path>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-green-800">Berhasil!</h4>
-                    <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-green-600 hover:text-green-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
-        {{-- Error Alert --}}
-        @if (session('error'))
-            <div class="mb-6 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-red-800">Error!</h4>
-                    <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-red-600 hover:text-red-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
         {{-- Filter Card --}}
         <div class="bg-white rounded-xl shadow-sm mb-4 border border-gray-200">
             <div class="p-4">
@@ -109,16 +57,20 @@
                             <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Ruangan
                             </label>
+
                             <select name="ruangan"
                                 class="w-full h-9 rounded-lg border-gray-300 text-sm px-2
-                               focus:ring-blue-500 focus:border-blue-500">
+               focus:ring-blue-500 focus:border-blue-500">
+
                                 <option value="">Semua Ruangan</option>
-                                @foreach ($ruanganOptions as $ruangan)
+
+                                @foreach (config('ruangan') as $ruangan)
                                     <option value="{{ $ruangan }}"
-                                        {{ request('ruangan') == $ruangan ? 'selected' : '' }}>
+                                        {{ request('ruangan') === $ruangan ? 'selected' : '' }}>
                                         {{ $ruangan }}
                                     </option>
                                 @endforeach
+
                             </select>
                         </div>
 
@@ -365,7 +317,7 @@
                             </span>
                         </div>
                         <div class="flex justify-center sm:justify-end">
-                           {{ $mutasi->links('vendor.pagination.simple-numbered') }}
+                            {{ $mutasi->links('vendor.pagination.simple-numbered') }}
                         </div>
                     </div>
                 </div>

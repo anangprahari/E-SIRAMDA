@@ -91,30 +91,6 @@
             </div>
         </div>
 
-        {{-- Success Alert --}}
-        @if (session('success'))
-            <div class="mb-6 bg-green-50 border-l-4 border-green-500 rounded-lg p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <path d="M5 12l5 5l10 -10"></path>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <p class="text-sm text-green-800">{{ session('success') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-green-600 hover:text-green-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
         {{-- Main Content --}}
         <div class="space-y-6">
 

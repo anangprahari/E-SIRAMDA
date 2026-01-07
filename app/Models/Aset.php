@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Aset extends Model
 {
     use HasFactory;
 
     protected $table = 'asets';
+
     protected $fillable = [
         'sub_sub_rincian_objek_id',
         'kode_barang',
@@ -41,44 +43,118 @@ class Aset extends Model
         'jumlah_barang' => 'integer',
     ];
 
+    // ===================================
+    // RELATIONSHIPS
+    // ===================================
+
     public function subSubRincianObjek()
     {
         return $this->belongsTo(SubSubRincianObjek::class);
     }
 
-    /**
-     * Get all mutasi for the aset
-     */
     public function mutasi()
     {
         return $this->hasMany(MutasiAset::class, 'aset_id');
     }
 
-    // Accessor untuk mendapatkan URL file bukti barang
+    // ===================================
+    // QUERY SCOPES
+    // ===================================
+
+    /**
+     * Scope untuk ordering berdasarkan kode barang
+     */
+    public function scopeOrderByKodeBarang(Builder $query): Builder
+    {
+        return $query->orderByRaw('
+            CAST(SUBSTRING_INDEX(kode_barang, ".", 1) AS UNSIGNED),
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 2), ".", -1) AS UNSIGNED),
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 3), ".", -1) AS UNSIGNED),
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 4), ".", -1) AS UNSIGNED),  
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 5), ".", -1) AS UNSIGNED),
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 6), ".", -1) AS UNSIGNED),
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 7), ".", -1) AS UNSIGNED),
+            CAST(SUBSTRING_INDEX(kode_barang, ".", -1) AS UNSIGNED)
+        ');
+    }
+
+    /**
+     * Scope untuk filter search
+     */
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        if (empty($search)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($search) {
+            $q->where('nama_bidang_barang', 'like', "%{$search}%")
+                ->orWhere('nama_jenis_barang', 'like', "%{$search}%")
+                ->orWhere('kode_barang', 'like', "%{$search}%")
+                ->orWhere('register', 'like', "%{$search}%");
+        });
+    }
+
+    /**
+     * Scope untuk filter tahun perolehan
+     */
+    public function scopeFilterTahunPerolehan(Builder $query, ?int $tahun): Builder
+    {
+        if (empty($tahun)) {
+            return $query;
+        }
+
+        return $query->where('tahun_perolehan', $tahun);
+    }
+
+    /**
+     * Scope untuk filter keadaan barang
+     */
+    public function scopeFilterKeadaanBarang(Builder $query, ?string $keadaan): Builder
+    {
+        if (empty($keadaan)) {
+            return $query;
+        }
+
+        return $query->where('keadaan_barang', $keadaan);
+    }
+
+    /**
+     * Scope untuk filter ruangan
+     */
+    public function scopeFilterRuangan(Builder $query, ?string $ruangan): Builder
+    {
+        if (empty($ruangan)) {
+            return $query;
+        }
+
+        return $query->where('ruangan', $ruangan);
+    }
+
+    // ===================================
+    // ACCESSORS
+    // ===================================
+
     public function getBuktiBarangUrlAttribute()
     {
         return $this->bukti_barang ? asset('storage/bukti_barang/' . $this->bukti_barang) : null;
     }
 
-    // Accessor untuk mendapatkan URL file bukti berita
     public function getBuktiBeritaUrlAttribute()
     {
         return $this->bukti_berita ? asset('storage/bukti_berita/' . $this->bukti_berita) : null;
     }
 
-    // Accessor untuk format harga
     public function getFormattedHargaAttribute()
     {
         return 'Rp ' . number_format($this->harga_satuan, 0, ',', '.');
     }
 
-    // Accessor untuk total harga
     public function getTotalHargaAttribute()
     {
         return $this->jumlah_barang * $this->harga_satuan;
     }
 
-    // Accessor untuk format total harga
     public function getFormattedTotalHargaAttribute()
     {
         return 'Rp ' . number_format($this->total_harga, 0, ',', '.');

@@ -14,8 +14,8 @@ class MutasiAset extends Model
         'user_id',
         'ruangan_asal',
         'ruangan_tujuan',
-        'lokasi_asal',      // TAMBAHAN BARU
-        'lokasi_tujuan',    // TAMBAHAN BARU
+        'lokasi_asal',  
+        'lokasi_tujuan',    
         'tanggal_mutasi',
         'nomor_surat',
         'berita_acara_path',
@@ -50,29 +50,5 @@ class MutasiAset extends Model
         return $this->berita_acara_path
             ? asset('storage/' . $this->berita_acara_path)
             : null;
-    }
-
-    /**
-     * Daftar ruangan tetap (15 opsi)
-     */
-    public static function ruanganOptions(): array
-    {
-        return [
-            'Seksi Pengembangan Aplikasi',
-            'Seksi Pengembangan E-Government',
-            'Seksi Tata Kelola E-Government',
-            'Seksi Pengelolaan dan Dokumentasi Informasi',
-            'Seksi Publikasi',
-            'Seksi Kemitraan Informasi dan Komunikasi Publik',
-            'Seksi Tata Kelola dan Operasional Persandian',
-            'Seksi Pengawasan dan Evaluasi Penyelenggaraan Persandian',
-            'Seksi Teknologi Informasi dan Komunikasi',
-            'Subbagian Umum dan Kepegawaian',
-            'Subbagian Keuangan dan Aset',
-            'Subbagian Program dan Pelaporan',
-            'Kelompok Jabatan Fungsional',
-            'Unit Pelaksana Teknis (UPT)',
-            'Sekretariat PPID / Pengelola Data',
-        ];
     }
 }

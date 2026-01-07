@@ -16,10 +16,10 @@
             </button>
             <div class="hidden sm:flex flex-col leading-tight select-none">
                 <span class="text-lg font-semibold text-gray-800 tracking-wide">
-                    Elektronik Sistem Informasi Inventaris
+                    Elektronik Sistem Informasi
                 </span>
                 <span class="text-sm text-gray-500">
-                    Barang Milik Daerah
+                    Inventaris Barang Milik Daerah
                 </span>
             </div>
         </div>

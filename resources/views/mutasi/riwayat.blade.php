@@ -41,16 +41,20 @@
                             <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Ruangan
                             </label>
+
                             <select name="ruangan"
                                 class="w-full h-9 rounded-lg border-gray-300 text-sm px-2
-                               focus:ring-blue-500 focus:border-blue-500">
+               focus:ring-blue-500 focus:border-blue-500">
+
                                 <option value="">Semua Ruangan</option>
-                                @foreach ($ruanganOptions as $ruangan)
+
+                                @foreach (config('ruangan') as $ruangan)
                                     <option value="{{ $ruangan }}"
-                                        {{ request('ruangan') == $ruangan ? 'selected' : '' }}>
+                                        {{ request('ruangan') === $ruangan ? 'selected' : '' }}>
                                         {{ $ruangan }}
                                     </option>
                                 @endforeach
+
                             </select>
                         </div>
 

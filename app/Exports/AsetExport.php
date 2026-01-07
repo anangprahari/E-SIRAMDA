@@ -20,63 +20,66 @@ class AsetExport implements FromQuery, WithHeadings, WithMapping, WithStyles, Sh
     protected $search;
     protected $tahunPerolehan;
     protected $keadaanBarang;
-    protected $tahunDari;        // Parameter baru
-    protected $tahunSampai;      // Parameter baru
+    protected $tahunDari;
+    protected $tahunSampai;
+    protected $ruangan;
     private $rowNumber = 0;
 
-    public function __construct($search = null, $tahunPerolehan = null, $keadaanBarang = null, $tahunDari = null, $tahunSampai = null)
-    {
+    public function __construct(
+        $search = null,
+        $tahunPerolehan = null,
+        $keadaanBarang = null,
+        $tahunDari = null,
+        $tahunSampai = null,
+        $ruangan = null
+    ) {
         $this->search = $search;
         $this->tahunPerolehan = $tahunPerolehan;
         $this->keadaanBarang = $keadaanBarang;
-        $this->tahunDari = $tahunDari;           // Inisialisasi parameter baru
-        $this->tahunSampai = $tahunSampai;       // Inisialisasi parameter baru
+        $this->tahunDari = $tahunDari;
+        $this->tahunSampai = $tahunSampai;
+        $this->ruangan = $ruangan;
     }
+
 
     public function query()
     {
-        $query = Aset::with([
+        return Aset::with([
             'subSubRincianObjek.subRincianObjek.rincianObjek.objek.jenis.kelompok.akun'
-        ]);
+        ])
+            // Search
+            ->search($this->search)
 
-        // Apply same filters as in index method
-        if ($this->search) {
-            $search = $this->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_bidang_barang', 'like', "%{$search}%")
-                    ->orWhere('nama_jenis_barang', 'like', "%{$search}%")
-                    ->orWhere('kode_barang', 'like', "%{$search}%")
-                    ->orWhere('register', 'like', "%{$search}%");
-            });
-        }
+            // Filter tahun perolehan (single year)
+            ->filterTahunPerolehan($this->tahunPerolehan)
 
-        // Filter tahun perolehan (single year)
-        if ($this->tahunPerolehan) {
-            $query->where('tahun_perolehan', $this->tahunPerolehan);
-        }
+            // Filter keadaan barang
+            ->filterKeadaanBarang($this->keadaanBarang)
 
-        // Filter rentang tahun perolehan (BARU)
-        if ($this->tahunDari || $this->tahunSampai) {
-            $query->where(function ($q) {
-                if ($this->tahunDari && $this->tahunSampai) {
-                    // Jika kedua tahun diisi
-                    $q->whereBetween('tahun_perolehan', [$this->tahunDari, $this->tahunSampai]);
-                } elseif ($this->tahunDari) {
-                    // Jika hanya tahun dari yang diisi
-                    $q->where('tahun_perolehan', '>=', $this->tahunDari);
-                } elseif ($this->tahunSampai) {
-                    // Jika hanya tahun sampai yang diisi
-                    $q->where('tahun_perolehan', '<=', $this->tahunSampai);
+            // ✅ FILTER RUANGAN (FIX UTAMA)
+            ->filterRuangan($this->ruangan)
+
+            // Filter rentang tahun perolehan
+            ->when(
+                $this->tahunDari || $this->tahunSampai,
+                function ($query) {
+                    $query->where(function ($q) {
+                        if ($this->tahunDari && $this->tahunSampai) {
+                            $q->whereBetween('tahun_perolehan', [
+                                $this->tahunDari,
+                                $this->tahunSampai
+                            ]);
+                        } elseif ($this->tahunDari) {
+                            $q->where('tahun_perolehan', '>=', $this->tahunDari);
+                        } elseif ($this->tahunSampai) {
+                            $q->where('tahun_perolehan', '<=', $this->tahunSampai);
+                        }
+                    });
                 }
-            });
-        }
+            )
 
-        if ($this->keadaanBarang) {
-            $query->where('keadaan_barang', $this->keadaanBarang);
-        }
-
-        // PERBAIKAN: Terapkan pengurutan yang sama seperti di method index() controller
-        return $query->orderByRaw('
+            // Ordering sama dengan index()
+            ->orderByRaw('
             CAST(SUBSTRING_INDEX(kode_barang, ".", 1) AS UNSIGNED),
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 2), ".", -1) AS UNSIGNED),
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_barang, ".", 3), ".", -1) AS UNSIGNED),

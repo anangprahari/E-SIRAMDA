@@ -2,100 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Repositories\UserRepository;
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of users.
-     */
-    public function index(Request $request)
+    public function __construct(
+        private UserRepository $userRepository,
+        private UserService $userService
+    ) {}
+
+    public function index(Request $request): View
     {
-        try {
-            $search = $request->get('search');
+        $users = $this->userRepository->paginateWithSearch(
+            $request->input('search')
+        );
 
-            $users = User::select(['id', 'name', 'username', 'email', 'created_at'])
-                ->when($search, function ($query, $search) {
-                    return $query->where(function ($q) use ($search) {
-                        $q->where('name', 'LIKE', "%{$search}%")
-                            ->orWhere('username', 'LIKE', "%{$search}%")
-                            ->orWhere('email', 'LIKE', "%{$search}%");
-                    });
-                })
-                ->orderBy('created_at', 'desc')
-                ->paginate(15);
-
-            return view('users.index', compact('users', 'search'));
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal memuat data pengguna: ' . $e->getMessage());
-        }
+        return view('users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     */
-    public function create()
+    public function create(): View
     {
         return view('users.create');
     }
 
-    /**
-     * Store a newly created user in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ], [
-            'name.required' => 'Nama wajib diisi.',
-            'username.required' => 'Username wajib diisi.',
-            'username.unique' => 'Username sudah digunakan.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah digunakan.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-        ]);
-
-        DB::beginTransaction();
-
         try {
-            User::create([
-                'name' => $validated['name'],
-                'username' => $validated['username'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
-
-            DB::commit();
+            $this->userService->create($request->validated());
 
             return redirect()
                 ->route('users.index')
-                ->with('success', 'Pengguna baru berhasil ditambahkan.');
-        } catch (Exception $e) {
-            DB::rollBack();
+                ->with('success', 'Pengguna berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            Log::error('Error creating user', [
+                'data' => $request->except('password'),
+                'message' => $e->getMessage()
+            ]);
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Gagal menambahkan pengguna: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menambahkan pengguna.')
+                ->withInput();
         }
     }
 
-    /**
-     * Display the specified user.
-     */
-    public function show(User $user)
+    public function show(int $id): View
     {
+        $user = $this->userRepository->findOrFail($id);
+
         return view('users.show', compact('user'));
     }
 }

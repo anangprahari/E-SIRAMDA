@@ -34,21 +34,6 @@
                 </div>
             </div>
         </div>
-        @if ($errors->any())
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    let errorMessages = '';
-                    @foreach ($errors->all() as $error)
-                        errorMessages += '{{ $error }}\n';
-                    @endforeach
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Validation Error',
-                        text: errorMessages,
-                    });
-                });
-            </script>
-        @endif
 
         <!-- Form Container -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-8">
@@ -114,8 +99,8 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Uraian Jenis/Barang</label>
                             <input type="text"
                                 class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 @error('uraian_jenis_barang') @enderror"
-                                id="uraian_jenis_barang" name="uraian_jenis_barang"
-                                value="{{ old('uraian_jenis_barang') }}" placeholder="Masukkan uraian jenis/barang">
+                                id="uraian_jenis_barang" name="uraian_jenis_barang" value="{{ old('uraian_jenis_barang') }}"
+                                placeholder="Masukkan uraian jenis/barang">
                             @error('uraian_jenis_barang')
                                 <p class="text-red-600 text-sm mt-1 font-medium">{{ $message }}</p>
                             @enderror
@@ -334,6 +319,8 @@
             </form>
         </div>
     </div>
+    {{-- Confirm Modal --}}
+    <x-notifications.confirm-modal />
 @endsection
 
 @push('page-scripts')
@@ -434,6 +421,8 @@
             const form = document.getElementById('asetLancarForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // ✅ Prevent default
+
                     const saldoAwalUnit = parseFloat(document.getElementById('saldo_awal_unit').value) || 0;
                     const saldoAwalHargaSatuan = parseFloat(document.getElementById(
                         'saldo_awal_harga_satuan').value) || 0;
@@ -444,55 +433,40 @@
                     const mutasiKurangUnit = parseFloat(document.getElementById('mutasi_kurang_unit')
                         .value) || 0;
 
-                    // Validation
+                    // Validasi
                     if (saldoAwalHargaSatuan == 0 && mutasiTambahHargaSatuan == 0) {
-                        e.preventDefault();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Harga satuan harus diisi, baik di Saldo Awal atau Mutasi Tambah.'
-                        });
+                        alert('⚠️ Harga satuan harus diisi, baik di Saldo Awal atau Mutasi Tambah.');
                         return;
                     }
 
                     if (saldoAwalUnit > 0 && saldoAwalHargaSatuan == 0) {
-                        e.preventDefault();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Jika ada unit saldo awal, harga satuan saldo awal harus diisi.'
-                        });
+                        alert('⚠️ Jika ada unit saldo awal, harga satuan saldo awal harus diisi.');
                         return;
                     }
 
                     if (mutasiTambahUnit > 0 && mutasiTambahHargaSatuan == 0) {
-                        e.preventDefault();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Jika ada unit mutasi tambah, harga satuan mutasi tambah harus diisi.'
-                        });
+                        alert('⚠️ Jika ada unit mutasi tambah, harga satuan mutasi tambah harus diisi.');
                         return;
                     }
 
                     const totalUnit = saldoAwalUnit + mutasiTambahUnit - mutasiKurangUnit;
                     if (totalUnit < 0) {
-                        e.preventDefault();
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Peringatan',
-                            text: 'Saldo Akhir Unit tidak boleh negatif. Silakan periksa kembali data mutasi Anda.'
-                        });
+                        alert(
+                            '⚠️ Saldo Akhir Unit tidak boleh negatif. Silakan periksa kembali data mutasi Anda.');
                         return;
                     }
 
-                    // Show loading
-                    Swal.fire({
-                        title: 'Menyimpan...',
-                        text: 'Sedang memproses data aset lancar',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
+                    // ✅ Tampilkan confirm modal
+                    const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+
+                    modal.show({
+                        title: 'Simpan Aset Lancar',
+                        message: 'Apakah Anda yakin ingin menyimpan data aset lancar ini?',
+                        confirmText: 'Ya, Simpan',
+                        cancelText: 'Batal',
+                        type: 'info',
+                        onConfirm: () => {
+                            form.submit(); // ✅ Submit setelah konfirmasi
                         }
                     });
                 });

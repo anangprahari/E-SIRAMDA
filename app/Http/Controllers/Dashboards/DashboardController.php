@@ -17,23 +17,19 @@ class DashboardController extends Controller
      * =====================================================
      *
      * Menyajikan:
-     * - KPI 3 Pilar (Aset Tetap, Aset Lancar, Mutasi)
+     * - KPI 2 Pilar (Aset Tetap, Mutasi)
      * - Grafik kondisi aset tetap
-     * - Grafik nilai aset lancar
      * - Mutasi terbaru
      * - Warning/alert
      */
     public function index(): View
     {
         // ========================================
-        // 1. KPI CARDS - 3 PILAR UTAMA
+        // 1. KPI CARDS - 2 PILAR UTAMA
         // ========================================
 
         // Total Aset Tetap (dalam unit)
         $totalAsetTetap = Aset::count();
-
-        // Total Nilai Aset Lancar (Saldo Akhir)
-        $totalNilaiAsetLancar = AsetLancar::sum('saldo_akhir_total');
 
         // Total Mutasi Aset
         $totalMutasi = MutasiAset::count();
@@ -58,26 +54,7 @@ class DashboardController extends Controller
         ];
 
         // ========================================
-        // 3. GRAFIK NILAI ASET LANCAR
-        // ========================================
-
-        // Agregasi nilai aset lancar
-        $nilaiAsetLancar = AsetLancar::selectRaw('
-            SUM(saldo_awal_total) as saldo_awal,
-            SUM(mutasi_tambah_nilai_total) as mutasi_tambah,
-            SUM(mutasi_kurang_nilai_total) as mutasi_kurang,
-            SUM(saldo_akhir_total) as saldo_akhir
-        ')->first();
-
-        $nilaiAsetLancarData = [
-            'saldo_awal' => $nilaiAsetLancar->saldo_awal ?? 0,
-            'mutasi_tambah' => $nilaiAsetLancar->mutasi_tambah ?? 0,
-            'mutasi_kurang' => $nilaiAsetLancar->mutasi_kurang ?? 0,
-            'saldo_akhir' => $nilaiAsetLancar->saldo_akhir ?? 0,
-        ];
-
-        // ========================================
-        // 4. MUTASI TERBARU (5 DATA)
+        // 3. MUTASI TERBARU (5 DATA)
         // ========================================
 
         $mutasiTerbaru = MutasiAset::with(['aset', 'user'])
@@ -86,7 +63,7 @@ class DashboardController extends Controller
             ->get();
 
         // ========================================
-        // 5. WARNING / ALERT - ASET TETAP ONLY
+        // 4. WARNING / ALERT - ASET TETAP ONLY
         // ========================================
 
         // Aset Tetap Rusak Berat
@@ -108,10 +85,10 @@ class DashboardController extends Controller
         $asetBelumDimutasi = Aset::whereDoesntHave('mutasi')->count();
 
         // ========================================
-        // 6. STATISTIK TAMBAHAN
+        // 5. STATISTIK TAMBAHAN
         // ========================================
 
-        // Total nilai aset tetap (yang punya ruangan saja)
+        // Total nilai aset tetap
         $totalNilaiAsetTetap = Aset::sum(DB::raw('jumlah_barang * harga_satuan'));
 
         // Mutasi bulan ini
@@ -123,7 +100,7 @@ class DashboardController extends Controller
         $persentaseKondisi = $this->hitungPersentaseKondisi($kondisiAsetData, $totalAsetTetap);
 
         // ========================================
-        // 8. ASET KOPTABLE (SECONDARY KPI)
+        // 6. ASET KOPTABLE (SECONDARY KPI)
         // ========================================
 
         // Aset Koptable: aset dengan harga_satuan < 1.250.000
@@ -137,11 +114,6 @@ class DashboardController extends Controller
         $totalNilaiAsetKoptable = Aset::where('harga_satuan', '<', $batasKoptable)
             ->sum(DB::raw('jumlah_barang * harga_satuan'));
 
-        // Persentase aset koptable dari total aset tetap
-        $persentaseKoptable = $totalAsetTetap > 0
-            ? round(($totalAsetKoptable / $totalAsetTetap) * 100, 1)
-            : 0;
-
         // ========================================
         // RETURN VIEW DENGAN DATA
         // ========================================
@@ -149,12 +121,10 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             // KPI
             'totalAsetTetap',
-            'totalNilaiAsetLancar',
             'totalMutasi',
 
             // Grafik
             'kondisiAsetData',
-            'nilaiAsetLancarData',
 
             // Mutasi
             'mutasiTerbaru',
@@ -168,7 +138,6 @@ class DashboardController extends Controller
             // Aset Koptable (Secondary KPI)
             'totalAsetKoptable',
             'totalNilaiAsetKoptable',
-            'persentaseKoptable',
             'batasKoptable',
 
             // Tambahan

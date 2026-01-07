@@ -365,30 +365,23 @@
 
                     {{-- Ruangan --}}
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Ruangan</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Ruangan
+                        </label>
+
                         <select name="ruangan"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+               transition-colors">
+
                             <option value="">Pilih Ruangan</option>
-                            <option value="Seksi Pengembangan Aplikasi">Seksi Pengembangan Aplikasi</option>
-                            <option value="Seksi Pengembangan E-Government">Seksi Pengembangan E-Government</option>
-                            <option value="Seksi Tata Kelola E-Government">Seksi Tata Kelola E-Government</option>
-                            <option value="Seksi Pengelolaan dan Dokumentasi Informasi">Seksi Pengelolaan dan Dokumentasi
-                                Informasi</option>
-                            <option value="Seksi Publikasi">Seksi Publikasi</option>
-                            <option value="Seksi Kemitraan Informasi dan Komunikasi Publik">Seksi Kemitraan Informasi dan
-                                Komunikasi Publik</option>
-                            <option value="Seksi Tata Kelola dan Operasional Persandian">Seksi Tata Kelola dan Operasional
-                                Persandian</option>
-                            <option value="Seksi Pengawasan dan Evaluasi Penyelenggaraan Persandian">Seksi Pengawasan dan
-                                Evaluasi Penyelenggaraan Persandian</option>
-                            <option value="Seksi Teknologi Informasi dan Komunikasi">Seksi Teknologi Informasi dan
-                                Komunikasi</option>
-                            <option value="Subbagian Umum dan Kepegawaian">Subbagian Umum dan Kepegawaian</option>
-                            <option value="Subbagian Keuangan dan Aset">Subbagian Keuangan dan Aset</option>
-                            <option value="Subbagian Program dan Pelaporan">Subbagian Program dan Pelaporan</option>
-                            <option value="Kelompok Jabatan Fungsional">Kelompok Jabatan Fungsional</option>
-                            <option value="Unit Pelaksana Teknis (UPT)">Unit Pelaksana Teknis (UPT)</option>
-                            <option value="Sekretariat PPID / Pengelola Data">Sekretariat PPID / Pengelola Data</option>
+
+                            @foreach (config('ruangan') as $ruangan)
+                                <option value="{{ $ruangan }}" {{ old('ruangan') === $ruangan ? 'selected' : '' }}>
+                                    {{ $ruangan }}
+                                </option>
+                            @endforeach
+
                         </select>
                     </div>
 
@@ -501,6 +494,8 @@
             </div>
         </form>
     </div>
+    {{-- Confirm Modal --}}
+    <x-notifications.confirm-modal />
 @endsection
 
 @push('page-scripts')
@@ -650,9 +645,10 @@
             });
 
             document.getElementById('assetForm')?.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default submit
+
                 const isValid = validateDropdowns();
                 if (!isValid) {
-                    e.preventDefault();
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -661,12 +657,18 @@
                     return;
                 }
 
-                Swal.fire({
-                    title: 'Menyimpan...',
-                    text: 'Sedang memproses data aset',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
+                // Dapatkan Alpine component
+                const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+
+                modal.show({
+                    title: 'Simpan Aset',
+                    message: 'Apakah Anda yakin ingin menyimpan data aset ini?',
+                    confirmText: 'Ya, Simpan',
+                    cancelText: 'Batal',
+                    type: 'info',
+                    onConfirm: () => {
+                        // Submit form setelah konfirmasi
+                        e.target.submit();
                     }
                 });
             });

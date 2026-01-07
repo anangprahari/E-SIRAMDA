@@ -22,71 +22,17 @@
                            text-white rounded-lg text-sm font-medium
                            hover:from-blue-700 hover:to-blue-800
                            transition-all duration-300 shadow-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" fill="none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" fill="none">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
                             Tambah Pengguna
                         </a>
                     </div>
-
                 </div>
             </div>
         </div>
-
-        {{-- Success Alert --}}
-        @if (session('success'))
-            <div class="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <path d="M5 12l5 5l10 -10"></path>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-green-800">Berhasil!</h4>
-                    <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-green-600 hover:text-green-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
-        {{-- Error Alert --}}
-        @if (session('error'))
-            <div class="mb-6 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-red-800">Error!</h4>
-                    <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-red-600 hover:text-red-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
         {{-- Main Table Card --}}
         <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
             {{-- Card Header --}}
@@ -166,7 +112,8 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" fill="none">
                                             <circle cx="12" cy="12" r="2"></circle>
-                                            <path d="M22 12c-2.667 4 -6 6 -10 6s-7.333 -2 -10 -6c2.667 -4 6 -6 10 -6s7.333 2 10 6">
+                                            <path
+                                                d="M22 12c-2.667 4 -6 6 -10 6s-7.333 -2 -10 -6c2.667 -4 6 -6 10 -6s7.333 2 10 6">
                                             </path>
                                         </svg>
                                         Detail
@@ -177,9 +124,8 @@
                             <tr>
                                 <td colspan="6" class="px-5 py-16">
                                     <div class="text-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="w-24 h-24 mx-auto text-blue-300 mb-4" viewBox="0 0 24 24"
-                                            stroke-width="1" stroke="currentColor" fill="none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 mx-auto text-blue-300 mb-4"
+                                            viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none">
                                             <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
                                             <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
@@ -189,8 +135,8 @@
                                         <p class="text-gray-500 mb-6">Mulai dengan menambahkan pengguna pertama Anda</p>
                                         <a href="{{ route('users.create') }}"
                                             class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl font-medium">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor" fill="none">
                                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                             </svg>
@@ -235,11 +181,6 @@
 @push('page-scripts')
     <script>
         $(document).ready(function() {
-            // Auto dismiss alerts
-            setTimeout(function() {
-                $('.animate-fade-in').fadeOut('slow');
-            }, 5000);
-
             // Smooth scroll on pagination
             $('.pagination a').on('click', function() {
                 $('html, body').animate({

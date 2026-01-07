@@ -39,30 +39,6 @@
             </div>
         </div>
 
-        {{-- Success Alert --}}
-        @if (session('status') === 'profile-updated')
-            <div class="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <path d="M5 12l5 5l10 -10"></path>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-green-800">Berhasil!</h4>
-                    <p class="text-sm text-green-700 mt-1">Profil berhasil diperbarui!</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-green-600 hover:text-green-800" @click="show = false">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
         {{-- Main Form Card --}}
         <div class="max-w-2xl mx-auto">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
@@ -86,7 +62,7 @@
 
                 {{-- Form Body --}}
                 <div class="p-6">
-                    <form method="POST" action="{{ route('profile.update') }}" class="space-y-5">
+                    <form id="profile-form" method="POST" action="{{ route('profile.update') }}" class="space-y-5">
                         @csrf
                         @method('PATCH')
 
@@ -120,25 +96,50 @@
                                 :value="old('email', $user->email)" required autocomplete="email" placeholder="contoh@email.com" />
                             <x-input-error class="mt-2" :messages="$errors->get('email')" />
                         </div>
-
                         {{-- Action Buttons --}}
                         <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                            <x-primary-button
-                                class="inline-flex items-center
-               bg-gradient-to-r from-blue-600 to-blue-700
-               hover:from-blue-700 hover:to-blue-800
-               text-white shadow-md">
-                                {{ __('Simpan Perubahan') }}
-                            </x-primary-button>
+                            <button type="button" onclick="confirmUpdateProfile()"
+                                class="inline-flex items-center px-6 py-2.5
+                   bg-gradient-to-r from-blue-600 to-blue-700
+                   hover:from-blue-700 hover:to-blue-800
+                   text-white text-sm font-medium rounded-lg
+                   transition-all duration-300 shadow-md hover:shadow-lg
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                Simpan Perubahan
+                            </button>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    {{-- Confirm Modal Component --}}
+    <x-notifications.confirm-modal />
 @endsection
+@push('page-scripts')
+    <script>
+        function confirmUpdateProfile() {
+            const modalElement = document.querySelector('[x-data="confirmModal()"]');
+            if (!modalElement) {
+                console.error('Confirm modal not found!');
+                return;
+            }
 
+            const modal = Alpine.$data(modalElement);
+
+            modal.show({
+                title: 'Konfirmasi Perubahan Profil',
+                message: 'Apakah Anda yakin ingin menyimpan perubahan profil ini?',
+                confirmText: 'Ya, Simpan',
+                cancelText: 'Batal',
+                type: 'info',
+                onConfirm: () => {
+                    document.getElementById('profile-form').submit();
+                }
+            });
+        }
+    </script>
+@endpush
 @push('page-styles')
     <style>
         @keyframes fade-in {

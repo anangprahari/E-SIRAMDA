@@ -148,26 +148,27 @@
         @csrf
         @method('DELETE')
     </form>
+    {{-- Confirm Modal --}}
+    <x-notifications.confirm-modal />
 @endsection
 
 @push('page-scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmDelete(url) {
-            Swal.fire({
-                title: 'Hapus Aset?',
-                text: 'Data yang dihapus tidak dapat dikembalikan.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Ya, Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
+            const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+
+            modal.show({
+                title: 'Hapus Aset Lancar',
+                message: 'Apakah Anda yakin ingin menghapus aset lancar ini? Data yang dihapus tidak dapat dikembalikan.',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                type: 'danger',
+                onConfirm: () => {
                     const form = document.getElementById('delete-form');
-                    form.action = url;
-                    form.submit();
+                    if (form) {
+                        form.action = url;
+                        form.submit();
+                    }
                 }
             });
         }

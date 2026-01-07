@@ -36,39 +36,6 @@
             </div>
         </div>
 
-        @if (session('success'))
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sukses',
-                        text: '{{ session('success') }}',
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                });
-            </script>
-        @endif
-
-        @if (session('error') || $errors->any())
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    let errorMessages = '';
-                    @if (session('error'))
-                        errorMessages += '{{ session('error') }}\n';
-                    @endif
-                    @foreach ($errors->all() as $error)
-                        errorMessages += '{{ $error }}\n';
-                    @endforeach
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Validation Error',
-                        text: errorMessages,
-                    });
-                });
-            </script>
-        @endif
-
         <!-- Form Container -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-8">
             <form id="asetLancarForm" action="{{ route('aset-lancars.update', $asetLancar) }}" method="POST">
@@ -470,6 +437,8 @@
             </form>
         </div>
     </div>
+    {{-- Confirm Modal --}}
+    <x-notifications.confirm-modal />
 @endsection
 @push('page-scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
@@ -528,6 +497,27 @@
             calcSaldoAwal();
             calcMutasiTambah();
             updateSaldoAkhir();
+
+            // Form submission handler
+            const form = document.getElementById('asetLancarForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // ✅ Prevent default
+
+                    const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+
+                    modal.show({
+                        title: 'Update Aset Lancar',
+                        message: 'Apakah Anda yakin ingin menyimpan perubahan pada aset lancar ini?',
+                        confirmText: 'Ya, Update',
+                        cancelText: 'Batal',
+                        type: 'warning',
+                        onConfirm: () => {
+                            form.submit(); // ✅ Submit setelah konfirmasi
+                        }
+                    });
+                });
+            }
         });
     </script>
 @endpush

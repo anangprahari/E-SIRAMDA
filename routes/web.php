@@ -30,17 +30,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/create', [AsetController::class, 'create'])->name('create');
         Route::post('/', [AsetController::class, 'store'])->name('store');
 
-        // 🔽 HARUS DI ATAS ROUTE DINAMIS
+        // 🔽 ROUTE AJAX (WAJIB DI ATAS)
+        Route::post('/get-register-info', [AsetController::class, 'getRegisterInfo'])
+            ->name('get-register-info');
+
+        Route::post('/generate-register-preview', [AsetController::class, 'generateRegisterPreview'])
+            ->name('generate-register-preview');
+
+        // 🔽 EXPORT & DOWNLOAD
         Route::get('/export', [AsetController::class, 'export'])->name('export');
 
-        Route::get('/{id}/download-pdf', [AsetController::class, 'downloadPdf'])->name('downloadPdf');
+        Route::get('/{id}/download-pdf', [AsetController::class, 'downloadPdf'])
+            ->name('downloadPdf');
 
-        // 🔽 ROUTE DINAMIS PALING BAWAH
+        // ✅ ROUTE BARU: DOWNLOAD LABEL ASET (IMAGE)
+        Route::get('/{id}/download-label', [AsetController::class, 'downloadLabel'])
+            ->name('downloadLabel');
+        // ✅ NEW: BATCH LABEL DOWNLOAD
+        Route::post('/labels/batch', [AsetController::class, 'downloadBatchLabel'])
+            ->name('downloadBatchLabel');
+
+        // ⚠️ ROUTE DINAMIS PALING BAWAH (WAJIB TERAKHIR)
         Route::get('/{aset}', [AsetController::class, 'show'])->name('show');
         Route::get('/{aset}/edit', [AsetController::class, 'edit'])->name('edit');
         Route::put('/{aset}', [AsetController::class, 'update'])->name('update');
         Route::delete('/{aset}', [AsetController::class, 'destroy'])->name('destroy');
     });
+
 
 
     // API Routes for Aset Tetap
