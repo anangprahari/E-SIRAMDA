@@ -42,19 +42,27 @@ class AsetFileService
         ?string $oldBuktiBerita,
         int $asetId
     ): array {
-        $files = [];
+        return [
+            'bukti_barang' => $buktiBarang
+                ? $this->replaceBuktiBarang($buktiBarang, $oldBuktiBarang, $asetId)
+                : $oldBuktiBarang,
 
-        if ($buktiBarang) {
-            $this->deleteBuktiBarang($oldBuktiBarang);
-            $files['bukti_barang'] = $this->uploadBuktiBarang($buktiBarang, $asetId);
-        }
+            'bukti_berita' => $buktiBerita
+                ? $this->replaceBuktiBerita($buktiBerita, $oldBuktiBerita, $asetId)
+                : $oldBuktiBerita, 
+        ];
+    }
 
-        if ($buktiBerita) {
-            $this->deleteBuktiBerita($oldBuktiBerita);
-            $files['bukti_berita'] = $this->uploadBuktiBerita($buktiBerita, $asetId);
-        }
+    private function replaceBuktiBarang(UploadedFile $file, ?string $old, int $asetId): string
+    {
+        $this->deleteBuktiBarang($old);
+        return $this->uploadBuktiBarang($file, $asetId);
+    }
 
-        return $files;
+    private function replaceBuktiBerita(UploadedFile $file, ?string $old, int $asetId): string
+    {
+        $this->deleteBuktiBerita($old);
+        return $this->uploadBuktiBerita($file, $asetId);
     }
 
     /**

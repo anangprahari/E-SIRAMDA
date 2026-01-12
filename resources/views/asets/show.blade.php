@@ -34,26 +34,6 @@
             color: #111827;
             font-weight: 500;
         }
-
-        .image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            cursor: pointer;
-            border-radius: 0.75rem;
-        }
-
-        .asset-image-container:hover .image-overlay {
-            opacity: 1;
-        }
     </style>
 @endpush
 
@@ -345,42 +325,67 @@
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
                     <!-- Asset Image Section -->
-                    @if ($aset->bukti_barang_url)
-                        <div class="space-y-3">
-                            <div class="asset-image-container relative overflow-hidden rounded-xl border border-gray-200">
-                                <img src="{{ $aset->bukti_barang_url }}" alt="Foto {{ $aset->nama_jenis_barang }}"
-                                    class="w-full h-[300px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
-                                    onclick="showImageModal('{{ $aset->bukti_barang_url }}', '{{ $aset->nama_jenis_barang }}')">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-gray-900">Foto Barang</h4>
+                            @if (!$aset->bukti_barang_url)
+                                <span class="px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-lg">
+                                    Belum diupload
+                                </span>
+                            @endif
+                        </div>
 
-                                <div class="image-overlay">
-                                    <div class="text-center">
+                        @if ($aset->bukti_barang_url)
+                            <div class="relative overflow-hidden rounded-xl border-2 border-gray-200 shadow-sm group cursor-pointer"
+                                onclick="showImageModal('{{ $aset->bukti_barang_url }}', '{{ $aset->nama_jenis_barang }}')">
+                                <img src="{{ $aset->bukti_barang_url }}" alt="Foto {{ $aset->nama_jenis_barang }}"
+                                    class="w-full h-[300px] object-cover transition-transform duration-300 group-hover:scale-105">
+
+                                <!-- Overlay hanya muncul saat hover -->
+                                <div
+                                    class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                                    <div
+                                        class="text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <svg class="w-12 h-12 text-white mx-auto mb-2" fill="none"
                                             stroke="currentColor" viewBox="0 0 24 24">
                                             <circle cx="10" cy="10" r="7"></circle>
-                                            <line x1="21" y1="21" x2="15" y2="15">
-                                            </line>
+                                            <line x1="21" y1="21" x2="15" y2="15"></line>
                                         </svg>
                                         <div class="text-white font-semibold">Klik untuk memperbesar</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @else
-                        <div
-                            class="flex items-center justify-center h-[300px] bg-gray-100 rounded-xl border border-gray-200">
-                            <div class="text-center text-gray-400">
-                                <svg class="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <rect x="4" y="4" width="16" height="12" rx="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21,15 16,10 5,21"></polyline>
-                                </svg>
-                                <p class="font-medium">Foto tidak tersedia</p>
+                        @else
+                            <div
+                                class="flex flex-col items-center justify-center h-[300px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-dashed border-gray-300 hover:border-gray-400 transition-colors duration-200">
+                                <div class="text-center p-6">
+                                    <div
+                                        class="mx-auto mb-4 w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"
+                                                ry="2"></rect>
+                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                            <polyline points="21 15 16 10 5 21"></polyline>
+                                        </svg>
+                                    </div>
+                                    <h5 class="text-base font-semibold text-gray-700 mb-2">Foto Belum Tersedia</h5>
+                                    <p class="text-sm text-gray-500 max-w-xs mx-auto mb-4">
+                                        Foto barang belum diunggah. Silakan edit aset untuk menambahkan foto dokumentasi.
+                                    </p>
+                                    <div class="flex items-center justify-center space-x-2 text-xs text-gray-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                        </svg>
+                                        <span>Format: JPG, PNG, JPEG (Max. 2MB)</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
 
                     <!-- Documents Section -->
                     <div class="space-y-4">
@@ -388,9 +393,9 @@
 
                         <!-- Bukti Barang -->
                         <div
-                            class="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors duration-200">
+                            class="flex items-center justify-between p-4 rounded-lg border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 shadow-sm">
                             <div class="flex items-center space-x-3">
-                                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                                <div class="p-2.5 bg-blue-100 text-blue-600 rounded-lg">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <rect x="4" y="4" width="16" height="12" rx="2"></rect>
                                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
@@ -405,7 +410,7 @@
                             <div>
                                 @if ($aset->bukti_barang_url)
                                     <a href="{{ $aset->bukti_barang_url }}" target="_blank"
-                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2">
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2 shadow-sm">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="2"></circle>
                                             <path
@@ -415,17 +420,20 @@
                                         <span>Lihat</span>
                                     </a>
                                 @else
-                                    <span class="px-3 py-1 bg-gray-200 text-gray-600 rounded-lg text-sm">Tidak
-                                        ada</span>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="px-3 py-1.5 bg-gray-200 text-gray-600 rounded-lg text-sm font-medium">
+                                            Belum ada
+                                        </span>
+                                    </div>
                                 @endif
                             </div>
                         </div>
 
                         <!-- Bukti Berita -->
                         <div
-                            class="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors duration-200">
+                            class="flex items-center justify-between p-4 rounded-lg border-2 border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 shadow-sm">
                             <div class="flex items-center space-x-3">
-                                <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                                <div class="p-2.5 bg-red-100 text-red-600 rounded-lg">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11">
@@ -442,7 +450,7 @@
                             <div>
                                 @if ($aset->bukti_berita_url)
                                     <a href="{{ $aset->bukti_berita_url }}" target="_blank"
-                                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2">
+                                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2 shadow-sm">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 3v12"></path>
                                             <path d="M8 11l4 4 4-4"></path>
@@ -451,147 +459,168 @@
                                         <span>Download</span>
                                     </a>
                                 @else
-                                    <span class="px-3 py-1 bg-gray-200 text-gray-600 rounded-lg text-sm">Tidak
-                                        ada</span>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="px-3 py-1.5 bg-gray-200 text-gray-600 rounded-lg text-sm font-medium">
+                                            Belum ada
+                                        </span>
+                                    </div>
                                 @endif
                             </div>
                         </div>
+
+                        <!-- Info Box -->
+                        @if (!$aset->bukti_barang_url || !$aset->bukti_berita_url)
+                            <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                                <div class="flex items-start space-x-3">
+                                    <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <h5 class="text-sm font-semibold text-amber-800 mb-1">Informasi Dokumentasi</h5>
+                                        <p class="text-xs text-amber-700 leading-relaxed">
+                                            Beberapa dokumen belum tersedia. Klik tombol <strong>Edit</strong> di atas untuk
+                                            menambahkan foto barang dan dokumen pendukung lainnya.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
 
-    </div>
-    </div>
+        <!-- Image Modal -->
+        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4"
+            onclick="closeImageModal(event)">
+            <div class="relative max-w-5xl w-full bg-white rounded-xl shadow-2xl overflow-hidden"
+                onclick="event.stopPropagation()">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+                    <h5 id="imageModalLabel" class="text-lg font-semibold text-gray-900">Foto Aset</h5>
+                    <button onclick="closeImageModal()"
+                        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4"
-        onclick="closeImageModal(event)">
-        <div class="relative max-w-5xl w-full bg-white rounded-xl shadow-2xl overflow-hidden"
-            onclick="event.stopPropagation()">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
-                <h5 id="imageModalLabel" class="text-lg font-semibold text-gray-900">Foto Aset</h5>
-                <button onclick="closeImageModal()"
-                    class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+                <!-- Modal Body -->
+                <div class="p-0 bg-gray-900">
+                    <img id="modalImage" src="" alt="Asset Image" class="w-full max-h-[70vh] object-contain">
+                </div>
 
-            <!-- Modal Body -->
-            <div class="p-0 bg-gray-900">
-                <img id="modalImage" src="" alt="Asset Image" class="w-full max-h-[70vh] object-contain">
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="flex items-center justify-end space-x-3 p-4 border-t border-gray-200 bg-gray-50">
-                <button onclick="closeImageModal()"
-                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
-                    Tutup
-                </button>
-                <a id="downloadImageBtn" href="" download
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 3v12m0 0l-4-4m4 4l4-4" />
-                        <rect x="4" y="17" width="16" height="4" rx="2" />
-                    </svg>
-                    <span>Download</span>
-                </a>
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-end space-x-3 p-4 border-t border-gray-200 bg-gray-50">
+                    <button onclick="closeImageModal()"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                        Tutup
+                    </button>
+                    <a id="downloadImageBtn" href="" download
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3v12m0 0l-4-4m4 4l4-4" />
+                            <rect x="4" y="17" width="16" height="4" rx="2" />
+                        </svg>
+                        <span>Download</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Delete Form -->
-    <form id="delete-form" method="POST" style="display: none;">
-        @csrf
-        @method('DELETE')
-    </form>
-    {{-- Confirm Modal --}}
-    <x-notifications.confirm-modal />
-@endsection
-@push('page-scripts')
-    <script>
-        // Image Modal Functions
-        function showImageModal(imageUrl, assetName) {
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            const modalLabel = document.getElementById('imageModalLabel');
-            const downloadBtn = document.getElementById('downloadImageBtn');
-            modalImage.src = imageUrl;
-            modalLabel.textContent = 'Foto ' + assetName;
-            downloadBtn.href = imageUrl;
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImageModal(event) {
-            if (!event || event.target.id === 'imageModal' || event.currentTarget.tagName === 'BUTTON') {
+        <!-- Delete Form -->
+        <form id="delete-form" method="POST" style="display: none;">
+            @csrf
+            @method('DELETE')
+        </form>
+        {{-- Confirm Modal --}}
+        <x-notifications.confirm-modal />
+    @endsection
+    @push('page-scripts')
+        <script>
+            // Image Modal Functions
+            function showImageModal(imageUrl, assetName) {
                 const modal = document.getElementById('imageModal');
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = 'auto';
+                const modalImage = document.getElementById('modalImage');
+                const modalLabel = document.getElementById('imageModalLabel');
+                const downloadBtn = document.getElementById('downloadImageBtn');
+                modalImage.src = imageUrl;
+                modalLabel.textContent = 'Foto ' + assetName;
+                downloadBtn.href = imageUrl;
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
             }
-        }
 
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeImageModal();
+            function closeImageModal(event) {
+                if (!event || event.target.id === 'imageModal' || event.currentTarget.tagName === 'BUTTON') {
+                    const modal = document.getElementById('imageModal');
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    document.body.style.overflow = 'auto';
+                }
             }
-        });
 
-        // Delete Confirmation
-        function confirmDelete(url) {
-            // Dapatkan Alpine component
-            const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
-
-            modal.show({
-                title: 'Hapus Aset',
-                message: 'Apakah Anda yakin ingin menghapus aset ini? Tindakan ini tidak dapat dibatalkan.',
-                confirmText: 'Ya, Hapus',
-                cancelText: 'Batal',
-                type: 'danger',
-                onConfirm: () => {
-                    const form = document.getElementById('delete-form');
-                    if (form) {
-                        form.action = url;
-                        form.submit();
-                    }
+            // Close modal with ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeImageModal();
                 }
             });
-        }
 
-        // Animate cards on scroll
-        document.addEventListener('DOMContentLoaded', function() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            };
+            // Delete Confirmation
+            function confirmDelete(url) {
+                // Dapatkan Alpine component
+                const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
 
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '0';
-                        entry.target.style.transform = 'translateY(20px)';
-
-                        setTimeout(() => {
-                            entry.target.style.transition =
-                                'opacity 0.6s ease, transform 0.6s ease';
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }, 50);
-
-                        observer.unobserve(entry.target);
+                modal.show({
+                    title: 'Hapus Aset',
+                    message: 'Apakah Anda yakin ingin menghapus aset ini? Tindakan ini tidak dapat dibatalkan.',
+                    confirmText: 'Ya, Hapus',
+                    cancelText: 'Batal',
+                    type: 'danger',
+                    onConfirm: () => {
+                        const form = document.getElementById('delete-form');
+                        if (form) {
+                            form.action = url;
+                            form.submit();
+                        }
                     }
                 });
-            }, observerOptions);
+            }
 
-            document.querySelectorAll('.animate-fade-in-up').forEach(card => {
-                observer.observe(card);
+            // Animate cards on scroll
+            document.addEventListener('DOMContentLoaded', function() {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                };
+
+                const observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '0';
+                            entry.target.style.transform = 'translateY(20px)';
+
+                            setTimeout(() => {
+                                entry.target.style.transition =
+                                    'opacity 0.6s ease, transform 0.6s ease';
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }, 50);
+
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.animate-fade-in-up').forEach(card => {
+                    observer.observe(card);
+                });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush

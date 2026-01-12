@@ -61,7 +61,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
-                    <h2 class="text-lg font-semibold text-gray-900">Pilih Hierarki Aset</h2>
+                    <h2 class="text-lg font-semibold text-gray-900">Hierarki Aset (Read-Only)</h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -70,8 +70,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             1. Akun <span class="text-red-500">*</span>
                         </label>
-                        <select id="akun" name="akun_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        <select id="akun" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Akun</option>
                             @foreach ($akuns as $akun)
                                 <option value="{{ $akun->id }}" data-kode="{{ $akun->kode }}"
@@ -80,16 +80,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-akun">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-akun"></div>
+                        <input type="hidden" name="akun_id" value="{{ old('akun_id', $selectedValues['akun_id'] ?? '') }}">
                     </div>
 
                     {{-- 2. Kelompok --}}
@@ -97,8 +88,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             2. Kelompok <span class="text-red-500">*</span>
                         </label>
-                        <select id="kelompok" name="kelompok_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:opacity-70">
+                        <select id="kelompok" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Kelompok</option>
                             @foreach ($kelompoks as $kelompok)
                                 <option value="{{ $kelompok->id }}" data-kode="{{ $kelompok->kode }}"
@@ -107,16 +98,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-kelompok">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-kelompok"></div>
+                        <input type="hidden" name="kelompok_id"
+                            value="{{ old('kelompok_id', $selectedValues['kelompok_id'] ?? '') }}">
                     </div>
 
                     {{-- 3. Jenis --}}
@@ -124,8 +107,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             3. Jenis <span class="text-red-500">*</span>
                         </label>
-                        <select id="jenis" name="jenis_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:opacity-70">
+                        <select id="jenis" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Jenis</option>
                             @foreach ($jenis as $j)
                                 <option value="{{ $j->id }}" data-kode="{{ $j->kode }}"
@@ -134,16 +117,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-jenis">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-jenis"></div>
+                        <input type="hidden" name="jenis_id"
+                            value="{{ old('jenis_id', $selectedValues['jenis_id'] ?? '') }}">
                     </div>
 
                     {{-- 4. Objek --}}
@@ -151,8 +126,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             4. Objek <span class="text-red-500">*</span>
                         </label>
-                        <select id="objek" name="objek_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:opacity-70">
+                        <select id="objek" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Objek</option>
                             @foreach ($objeks as $objek)
                                 <option value="{{ $objek->id }}" data-kode="{{ $objek->kode }}"
@@ -161,16 +136,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-objek">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-objek"></div>
+                        <input type="hidden" name="objek_id"
+                            value="{{ old('objek_id', $selectedValues['objek_id'] ?? '') }}">
                     </div>
 
                     {{-- 5. Rincian Objek --}}
@@ -178,8 +145,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             5. Rincian Objek <span class="text-red-500">*</span>
                         </label>
-                        <select id="rincian_objek" name="rincian_objek_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:opacity-70">
+                        <select id="rincian_objek" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Rincian Objek</option>
                             @foreach ($rincianObjeks as $rincianObjek)
                                 <option value="{{ $rincianObjek->id }}" data-kode="{{ $rincianObjek->kode }}"
@@ -188,16 +155,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-rincian-objek">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-rincian-objek"></div>
+                        <input type="hidden" name="rincian_objek_id"
+                            value="{{ old('rincian_objek_id', $selectedValues['rincian_objek_id'] ?? '') }}">
                     </div>
 
                     {{-- 6. Sub Rincian Objek --}}
@@ -205,8 +164,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             6. Sub Rincian Objek <span class="text-red-500">*</span>
                         </label>
-                        <select id="sub_rincian_objek" name="sub_rincian_objek_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:opacity-70">
+                        <select id="sub_rincian_objek" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Sub Rincian Objek</option>
                             @foreach ($subRincianObjeks as $subRincianObjek)
                                 <option value="{{ $subRincianObjek->id }}" data-kode="{{ $subRincianObjek->kode }}"
@@ -215,17 +174,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-sub-rincian-objek">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-sub-rincian-objek">
-                        </div>
+                        <input type="hidden" name="sub_rincian_objek_id"
+                            value="{{ old('sub_rincian_objek_id', $selectedValues['sub_rincian_objek_id'] ?? '') }}">
                     </div>
 
                     {{-- 7. Sub Sub Rincian Objek --}}
@@ -233,28 +183,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             7. Sub Sub Rincian Objek <span class="text-red-500">*</span>
                         </label>
-                        <select id="sub_sub_rincian_objek" name="sub_sub_rincian_objek_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:opacity-70">
+                        <select id="sub_sub_rincian_objek" disabled
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed opacity-75">
                             <option value="">Pilih Sub Sub Rincian Objek</option>
                             @foreach ($subSubRincianObjeks as $subSubRincianObjek)
-                                <option value="{{ $subSubRincianObjek->id }}"
-                                    data-kode="{{ $subSubRincianObjek->kode }}"
+                                <option value="{{ $subSubRincianObjek->id }}" data-kode="{{ $subSubRincianObjek->kode }}"
                                     {{ old('sub_sub_rincian_objek_id', $selectedValues['sub_sub_rincian_objek_id'] ?? '') == $subSubRincianObjek->id ? 'selected' : '' }}>
                                     {{ $subSubRincianObjek->kode }} - {{ $subSubRincianObjek->nama_barang }}
                                 </option>
                             @endforeach
                         </select>
-                        <div class="loading-spinner absolute right-3 top-10" id="loading-sub-sub-rincian-objek">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-sub-sub-rincian-objek">
-                        </div>
+                        <input type="hidden" name="sub_sub_rincian_objek_id"
+                            value="{{ old('sub_sub_rincian_objek_id', $selectedValues['sub_sub_rincian_objek_id'] ?? '') }}">
                     </div>
                 </div>
             </div>
@@ -577,806 +517,160 @@
 @endsection
 
 @push('page-scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // Variabel global untuk menyimpan hierarki yang dipilih
-    let selectedHierarchy = {
-        akun: @json($selectedHierarchy['akun'] ?? null),
-        kelompok: @json($selectedHierarchy['kelompok'] ?? null),
-        jenis: @json($selectedHierarchy['jenis'] ?? null),
-        objek: @json($selectedHierarchy['objek'] ?? null),
-        rincianObjek: @json($selectedHierarchy['rincian_objek'] ?? null),
-        subRincianObjek: @json($selectedHierarchy['sub_rincian_objek'] ?? null),
-        subSubRincianObjek: @json($selectedHierarchy['sub_sub_rincian_objek'] ?? null)
-    };
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // ===================================
+        // KONSTANTA & KONFIGURASI
+        // ===================================
+        const isEditMode = true;
+        const LOCKED_KODE_BARANG = "{{ old('kode_barang', $aset->kode_barang) }}";
+        const KODE_RUSAK_BERAT = '1.5.4.01.01.01.005';
 
-    // Data untuk pre-populate (dari controller)
-    const selectedValues = @json($selectedValues ?? []);
-    const isEditMode = true;
-    let isInitializing = true;
+        let selectedHierarchy = {
+            akun: @json($selectedHierarchy['akun'] ?? null),
+            kelompok: @json($selectedHierarchy['kelompok'] ?? null),
+            jenis: @json($selectedHierarchy['jenis'] ?? null),
+            objek: @json($selectedHierarchy['objek'] ?? null),
+            rincianObjek: @json($selectedHierarchy['rincian_objek'] ?? null),
+            subRincianObjek: @json($selectedHierarchy['sub_rincian_objek'] ?? null),
+            subSubRincianObjek: @json($selectedHierarchy['sub_sub_rincian_objek'] ?? null)
+        };
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Setup event listeners
-        setupEventListeners();
+        const selectedValues = @json($selectedValues ?? []);
 
-        // Pre-load existing hierarchy pada saat edit
-        setTimeout(() => {
-            preLoadExistingHierarchy();
-        }, 100);
+        // ===================================
+        // INITIALIZATION
+        // ===================================
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
 
-        // Show validation errors if any
-        @if ($errors->any())
-            let errorMessages = '';
-            @foreach ($errors->all() as $error)
-                errorMessages += '{{ $error }}\n';
-            @endforeach
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: errorMessages,
-            });
-        @endif
-    });
-
-    function preLoadExistingHierarchy() {
-        isInitializing = true;
-
-        // Set akun yang sudah terpilih dari awal
-        if (selectedValues.akun_id) {
-            document.getElementById('akun').value = selectedValues.akun_id;
-            selectedHierarchy.akun = getSelectedOption(document.getElementById('akun'));
-
-            // Load kelompok
-            loadKelompoks(selectedValues.akun_id, () => {
-                if (selectedValues.kelompok_id) {
-                    document.getElementById('kelompok').value = selectedValues.kelompok_id;
-                    selectedHierarchy.kelompok = getSelectedOption(document.getElementById('kelompok'));
-
-                    loadJenis(selectedValues.kelompok_id, () => {
-                        if (selectedValues.jenis_id) {
-                            document.getElementById('jenis').value = selectedValues.jenis_id;
-                            selectedHierarchy.jenis = getSelectedOption(document.getElementById(
-                                'jenis'));
-
-                            loadObjeks(selectedValues.jenis_id, () => {
-                                if (selectedValues.objek_id) {
-                                    document.getElementById('objek').value = selectedValues
-                                        .objek_id;
-                                    selectedHierarchy.objek = getSelectedOption(document
-                                        .getElementById('objek'));
-
-                                    loadRincianObjeks(selectedValues.objek_id, () => {
-                                        if (selectedValues.rincian_objek_id) {
-                                            document.getElementById('rincian_objek')
-                                                .value = selectedValues
-                                                .rincian_objek_id;
-                                            selectedHierarchy.rincianObjek =
-                                                getSelectedOption(document
-                                                    .getElementById('rincian_objek'));
-
-                                            loadSubRincianObjeks(selectedValues
-                                                .rincian_objek_id, () => {
-                                                    if (selectedValues
-                                                        .sub_rincian_objek_id) {
-                                                        document.getElementById(
-                                                                'sub_rincian_objek')
-                                                            .value = selectedValues
-                                                            .sub_rincian_objek_id;
-                                                        selectedHierarchy
-                                                            .subRincianObjek =
-                                                            getSelectedOption(
-                                                                document
-                                                                .getElementById(
-                                                                    'sub_rincian_objek'
-                                                                ));
-
-                                                        loadSubSubRincianObjeks(
-                                                            selectedValues
-                                                            .sub_rincian_objek_id,
-                                                            () => {
-                                                                if (selectedValues
-                                                                    .sub_sub_rincian_objek_id
-                                                                ) {
-                                                                    document
-                                                                        .getElementById(
-                                                                            'sub_sub_rincian_objek'
-                                                                        )
-                                                                        .value =
-                                                                        selectedValues
-                                                                        .sub_sub_rincian_objek_id;
-                                                                    selectedHierarchy
-                                                                        .subSubRincianObjek =
-                                                                        getSelectedOption(
-                                                                            document
-                                                                            .getElementById(
-                                                                                'sub_sub_rincian_objek'
-                                                                            )
-                                                                        );
-                                                                }
-                                                                finishInitialization
-                                                                    ();
-                                                            });
-                                                    } else {
-                                                        finishInitialization();
-                                                    }
-                                                });
-                                        } else {
-                                            finishInitialization();
-                                        }
-                                    });
-                                } else {
-                                    finishInitialization();
-                                }
-                            });
-                        } else {
-                            finishInitialization();
-                        }
-                    });
-                } else {
-                    finishInitialization();
-                }
-            });
-        } else {
-            finishInitialization();
-        }
-    }
-
-    // Tambahkan function baru untuk menyelesaikan inisialisasi
-    function finishInitialization() {
-        // PENTING: Reset flag isInitializing agar event listener bisa berfungsi
-        isInitializing = false;
-
-        // Update display dan kode barang
-        updateHierarchyDisplay();
-        updateKodeBarang();
-
-        console.log('Initialization completed. Event listeners are now active.');
-    }
-
-    function setupEventListeners() {
-        // Event listeners untuk setiap dropdown
-        document.getElementById('akun')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            const akunId = this.value;
-            selectedHierarchy.akun = getSelectedOption(this);
-
-            if (akunId) {
-                loadKelompoks(akunId, () => {
-                    resetDropdowns(['kelompok', 'jenis', 'objek', 'rincian_objek', 'sub_rincian_objek',
-                        'sub_sub_rincian_objek'
-                    ]);
-                    updateHierarchyDisplay();
-                    updateKodeBarang();
-                });
-            } else {
-                resetAllDropdowns();
-            }
-        });
-
-        document.getElementById('kelompok')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            const kelompokId = this.value;
-            selectedHierarchy.kelompok = getSelectedOption(this);
-
-            if (kelompokId) {
-                loadJenis(kelompokId, () => {
-                    resetDropdowns(['jenis', 'objek', 'rincian_objek', 'sub_rincian_objek',
-                        'sub_sub_rincian_objek'
-                    ]);
-                    updateHierarchyDisplay();
-                    updateKodeBarang();
-                });
-            } else {
-                resetDropdowns(['jenis', 'objek', 'rincian_objek', 'sub_rincian_objek',
-                    'sub_sub_rincian_objek'
-                ]);
-                updateHierarchyDisplay();
-                updateKodeBarang();
-            }
-        });
-
-        document.getElementById('jenis')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            const jenisId = this.value;
-            selectedHierarchy.jenis = getSelectedOption(this);
-
-            if (jenisId) {
-                loadObjeks(jenisId, () => {
-                    resetDropdowns(['objek', 'rincian_objek', 'sub_rincian_objek',
-                        'sub_sub_rincian_objek'
-                    ]);
-                    updateHierarchyDisplay();
-                    updateKodeBarang();
-                });
-            } else {
-                resetDropdowns(['objek', 'rincian_objek', 'sub_rincian_objek', 'sub_sub_rincian_objek']);
-                updateHierarchyDisplay();
-                updateKodeBarang();
-            }
-        });
-
-        document.getElementById('objek')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            const objekId = this.value;
-            selectedHierarchy.objek = getSelectedOption(this);
-
-            if (objekId) {
-                loadRincianObjeks(objekId, () => {
-                    resetDropdowns(['rincian_objek', 'sub_rincian_objek', 'sub_sub_rincian_objek']);
-                    updateHierarchyDisplay();
-                    updateKodeBarang();
-                });
-            } else {
-                resetDropdowns(['rincian_objek', 'sub_rincian_objek', 'sub_sub_rincian_objek']);
-                updateHierarchyDisplay();
-                updateKodeBarang();
-            }
-        });
-
-        document.getElementById('rincian_objek')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            const rincianObjekId = this.value;
-            selectedHierarchy.rincianObjek = getSelectedOption(this);
-
-            if (rincianObjekId) {
-                loadSubRincianObjeks(rincianObjekId, () => {
-                    resetDropdowns(['sub_rincian_objek', 'sub_sub_rincian_objek']);
-                    updateHierarchyDisplay();
-                    updateKodeBarang();
-                });
-            } else {
-                resetDropdowns(['sub_rincian_objek', 'sub_sub_rincian_objek']);
-                updateHierarchyDisplay();
-                updateKodeBarang();
-            }
-        });
-
-        document.getElementById('sub_rincian_objek')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            const subRincianObjekId = this.value;
-            selectedHierarchy.subRincianObjek = getSelectedOption(this);
-
-            // Auto-fill Nama Bidang Barang
-            if (selectedHierarchy.subRincianObjek && selectedHierarchy.subRincianObjek.nama) {
-                const namaBidangBarangInput = document.querySelector('input[name="nama_bidang_barang"]');
-                if (namaBidangBarangInput) {
-                    namaBidangBarangInput.value = selectedHierarchy.subRincianObjek.nama;
-                    namaBidangBarangInput.classList.add('auto-filled');
-                }
-            } else {
-                const namaBidangBarangInput = document.querySelector('input[name="nama_bidang_barang"]');
-                if (namaBidangBarangInput) {
-                    namaBidangBarangInput.value = '';
-                    namaBidangBarangInput.classList.remove('auto-filled');
-                }
-            }
-
-            if (subRincianObjekId) {
-                loadSubSubRincianObjeks(subRincianObjekId, () => {
-                    resetDropdowns(['sub_sub_rincian_objek']);
-                    updateHierarchyDisplay();
-                    updateKodeBarang();
-                });
-            } else {
-                resetDropdowns(['sub_sub_rincian_objek']);
-                updateHierarchyDisplay();
-                updateKodeBarang();
-            }
-        });
-
-        document.getElementById('sub_sub_rincian_objek')?.addEventListener('change', function() {
-            if (isInitializing) return;
-
-            selectedHierarchy.subSubRincianObjek = getSelectedOption(this);
+            // Initial display
             updateHierarchyDisplay();
             updateKodeBarang();
-        });
 
-        document.getElementById('assetForm')?.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default submit
-
-            const isValid = validateDropdowns();
-            if (!isValid) {
+            // Validation errors
+            @if ($errors->any())
+                let errorMessages = '';
+                @foreach ($errors->all() as $error)
+                    errorMessages += '{{ $error }}\n';
+                @endforeach
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oops...',
-                    text: 'Harap lengkapi semua level hierarki aset yang wajib diisi!',
+                    title: 'Validation Error',
+                    text: errorMessages,
                 });
+            @endif
+        });
+
+        // ===================================
+        // EVENT LISTENERS SETUP
+        // ===================================
+        function setupEventListeners() {
+            // Form submit
+            document.getElementById('assetForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const isValid = validateDropdowns();
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Harap lengkapi semua level hierarki aset yang wajib diisi!',
+                    });
+                    return;
+                }
+
+                const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+                modal.show({
+                    title: 'Update Aset',
+                    message: 'Apakah Anda yakin ingin memperbarui data aset ini?',
+                    confirmText: 'Ya, Update',
+                    cancelText: 'Batal',
+                    type: 'warning',
+                    onConfirm: () => {
+                        e.target.submit();
+                    }
+                });
+            });
+
+            // Keadaan barang change
+            const keadaanBarangSelect = document.querySelector('select[name="keadaan_barang"]');
+            if (keadaanBarangSelect) {
+                keadaanBarangSelect.addEventListener('change', function() {
+                    handleKeadaanBarangChange(this.value);
+                });
+
+                // Trigger untuk nilai existing
+                if (keadaanBarangSelect.value) {
+                    setTimeout(() => {
+                        handleKeadaanBarangChange(keadaanBarangSelect.value);
+                    }, 100);
+                }
+            }
+        }
+
+        // ===================================
+        // KODE BARANG MANAGEMENT
+        // ===================================
+        function updateKodeBarang() {
+            const kodeInput = document.getElementById('kode_barang');
+            const kodeDisplay = document.getElementById('kode-barang-text');
+            const kodePreview = document.getElementById('kode-preview');
+
+            // Gunakan kode barang locked dari database
+            if (kodeInput && LOCKED_KODE_BARANG) {
+                kodeInput.value = LOCKED_KODE_BARANG;
+            }
+            if (kodeDisplay && LOCKED_KODE_BARANG) {
+                kodeDisplay.textContent = LOCKED_KODE_BARANG;
+            }
+            if (kodePreview && LOCKED_KODE_BARANG) {
+                kodePreview.style.display = 'block';
+            }
+        }
+
+        function handleKeadaanBarangChange(keadaanBarang) {
+            const kodeBarangDisplay = document.getElementById('kode-barang-text');
+            const kodeBarangInput = document.getElementById('kode_barang');
+            const kodePreview = document.getElementById('kode-preview');
+
+            // ⚠️ EXCEPTION: Jika RB, ubah kode barang
+            if (keadaanBarang === 'RB') {
+                if (kodeBarangDisplay) {
+                    kodeBarangDisplay.textContent = KODE_RUSAK_BERAT;
+                    kodeBarangDisplay.classList.remove('text-green-700');
+                    kodeBarangDisplay.classList.add('text-red-700');
+                }
+
+                if (kodeBarangInput) {
+                    kodeBarangInput.value = KODE_RUSAK_BERAT;
+                }
+
+                if (kodePreview) {
+                    kodePreview.style.display = 'block';
+                    kodePreview.classList.remove('from-green-50', 'to-emerald-50', 'border-green-300');
+                    kodePreview.classList.add('from-red-50', 'to-rose-50', 'border-red-300');
+
+                    const icon = kodePreview.querySelector('svg');
+                    if (icon) {
+                        icon.classList.remove('text-green-600');
+                        icon.classList.add('text-red-600');
+                    }
+                }
+
+                showRusakBeratWarning();
                 return;
             }
 
-            // Dapatkan Alpine component
-            const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
-
-            modal.show({
-                title: 'Update Aset',
-                message: 'Apakah Anda yakin ingin memperbarui data aset ini?',
-                confirmText: 'Ya, Update',
-                cancelText: 'Batal',
-                type: 'warning',
-                onConfirm: () => {
-                    // Submit form setelah konfirmasi
-                    e.target.submit();
-                }
-            });
-        });
-
-        // Event listener untuk keadaan barang
-        const keadaanBarangSelect = document.querySelector('select[name="keadaan_barang"]');
-        if (keadaanBarangSelect) {
-            keadaanBarangSelect.addEventListener('change', function() {
-                handleKeadaanBarangChange(this.value);
-            });
-
-            // Trigger untuk nilai yang sudah ada saat halaman dimuat
-            if (keadaanBarangSelect.value) {
-                setTimeout(() => {
-                    handleKeadaanBarangChange(keadaanBarangSelect.value);
-                }, 500);
-            }
-        }
-    }
-
-    function getSelectedOption(selectElement) {
-        if (!selectElement) return null;
-
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
-        if (selectedOption && selectedOption.value) {
-            const kode = selectedOption.dataset.kode || '';
-            let nama = selectedOption.textContent;
-            if (nama.includes(' - ')) {
-                nama = nama.split(' - ').slice(1).join(' - ');
-            }
-
-            return {
-                id: selectedOption.value,
-                nama: nama,
-                kode: kode
-            };
-        }
-        return null;
-    }
-
-    function loadKelompoks(akunId, callback = null) {
-        const select = document.getElementById('kelompok');
-        if (!select) return;
-
-        showLoading('kelompok');
-
-        fetch(`/api/asets/kelompoks/${akunId}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    populateSelect(select, data.data, 'Pilih Kelompok');
-                    select.disabled = data.data.length === 0;
-                    hideError('kelompok');
-                    if (callback) callback();
-                } else {
-                    showError('kelompok', data.message || 'Gagal memuat data kelompok');
-                    select.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading kelompoks:', error);
-                showError('kelompok', 'Terjadi kesalahan saat memuat data');
-                select.disabled = true;
-            })
-            .finally(() => {
-                hideLoading('kelompok');
-            });
-    }
-
-    function loadJenis(kelompokId, callback = null) {
-        const select = document.getElementById('jenis');
-        if (!select) return;
-
-        showLoading('jenis');
-
-        fetch(`/api/asets/jenis/${kelompokId}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    populateSelect(select, data.data, 'Pilih Jenis');
-                    select.disabled = data.data.length === 0;
-                    hideError('jenis');
-                    if (callback) callback();
-                } else {
-                    showError('jenis', data.message || 'Gagal memuat data jenis');
-                    select.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading jenis:', error);
-                showError('jenis', 'Terjadi kesalahan saat memuat data');
-                select.disabled = true;
-            })
-            .finally(() => {
-                hideLoading('jenis');
-            });
-    }
-
-    function loadObjeks(jenisId, callback = null) {
-        const select = document.getElementById('objek');
-        if (!select) return;
-
-        showLoading('objek');
-
-        fetch(`/api/asets/objeks/${jenisId}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    populateSelect(select, data.data, 'Pilih Objek');
-                    select.disabled = data.data.length === 0;
-                    hideError('objek');
-                    if (callback) callback();
-                } else {
-                    showError('objek', data.message || 'Gagal memuat data objek');
-                    select.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading objeks:', error);
-                showError('objek', 'Terjadi kesalahan saat memuat data');
-                select.disabled = true;
-            })
-            .finally(() => {
-                hideLoading('objek');
-            });
-    }
-
-    function loadRincianObjeks(objekId, callback = null) {
-        const select = document.getElementById('rincian_objek');
-        if (!select) return;
-
-        showLoading('rincian-objek');
-
-        fetch(`/api/asets/rincian-objeks/${objekId}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    populateSelect(select, data.data, 'Pilih Rincian Objek');
-                    select.disabled = data.data.length === 0;
-                    hideError('rincian-objek');
-                    if (callback) callback();
-                } else {
-                    showError('rincian-objek', data.message || 'Gagal memuat data rincian objek');
-                    select.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading rincian objeks:', error);
-                showError('rincian-objek', 'Terjadi kesalahan saat memuat data');
-                select.disabled = true;
-            })
-            .finally(() => {
-                hideLoading('rincian-objek');
-            });
-    }
-
-    function loadSubRincianObjeks(rincianObjekId, callback = null) {
-        const select = document.getElementById('sub_rincian_objek');
-        if (!select) return;
-
-        showLoading('sub-rincian-objek');
-
-        fetch(`/api/asets/sub-rincian-objeks/${rincianObjekId}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    populateSelect(select, data.data, 'Pilih Sub Rincian Objek');
-                    select.disabled = data.data.length === 0;
-                    hideError('sub-rincian-objek');
-                    if (callback) callback();
-                } else {
-                    showError('sub-rincian-objek', data.message || 'Gagal memuat data sub rincian objek');
-                    select.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading sub rincian objeks:', error);
-                showError('sub-rincian-objek', 'Terjadi kesalahan saat memuat data');
-                select.disabled = true;
-            })
-            .finally(() => {
-                hideLoading('sub-rincian-objek');
-            });
-    }
-
-    function loadSubSubRincianObjeks(subRincianObjekId, callback = null) {
-        const select = document.getElementById('sub_sub_rincian_objek');
-        if (!select) return;
-
-        showLoading('sub-sub-rincian-objek');
-
-        fetch(`/api/asets/sub-sub-rincian-objeks/${subRincianObjekId}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    populateSelect(select, data.data, 'Pilih Sub Sub Rincian Objek', 'nama_barang');
-                    select.disabled = data.data.length === 0;
-                    hideError('sub-sub-rincian-objek');
-                    if (callback) callback();
-                } else {
-                    showError('sub-sub-rincian-objek', data.message || 'Gagal memuat data sub sub rincian objek');
-                    select.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading sub sub rincian objeks:', error);
-                showError('sub-sub-rincian-objek', 'Terjadi kesalahan saat memuat data');
-                select.disabled = true;
-            })
-            .finally(() => {
-                hideLoading('sub-sub-rincian-objek');
-            });
-    }
-
-    function populateSelect(select, data, placeholder, nameField = 'nama') {
-        if (!select) return;
-
-        select.innerHTML = `<option value="">${placeholder}</option>`;
-
-        data.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.id;
-            option.textContent = `${item.kode} - ${item[nameField]}`;
-            option.dataset.kode = item.kode;
-            select.appendChild(option);
-        });
-    }
-
-    function resetDropdowns(dropdownIds) {
-        dropdownIds.forEach(id => {
-            const select = document.getElementById(id);
-            if (select) {
-                select.innerHTML = '<option value="">Pilih...</option>';
-                select.disabled = true;
-                const errorId = id.replace(/_/g, '-');
-                hideError(errorId);
-
-                const key = getHierarchyKey(id);
-                if (key && selectedHierarchy[key]) {
-                    delete selectedHierarchy[key];
-                }
-
-                if (id === 'sub_rincian_objek') {
-                    const namaBidangBarangInput = document.querySelector('input[name="nama_bidang_barang"]');
-                    if (namaBidangBarangInput) {
-                        namaBidangBarangInput.value = '';
-                        namaBidangBarangInput.classList.remove('auto-filled');
-                    }
-                }
-            }
-        });
-    }
-
-    function getHierarchyKey(dropdownId) {
-        const mapping = {
-            'akun': 'akun',
-            'kelompok': 'kelompok',
-            'jenis': 'jenis',
-            'objek': 'objek',
-            'rincian_objek': 'rincianObjek',
-            'sub_rincian_objek': 'subRincianObjek',
-            'sub_sub_rincian_objek': 'subSubRincianObjek'
-        };
-        return mapping[dropdownId];
-    }
-
-    function resetAllDropdowns() {
-        resetDropdowns(['kelompok', 'jenis', 'objek', 'rincian_objek', 'sub_rincian_objek', 'sub_sub_rincian_objek']);
-        hideKodePreview();
-
-        const currentAkun = selectedHierarchy.akun;
-        selectedHierarchy = {};
-        if (currentAkun) {
-            selectedHierarchy.akun = currentAkun;
-        }
-
-        updateHierarchyDisplay();
-    }
-
-    function showLoading(type) {
-        const loadingElement = document.getElementById(`loading-${type}`);
-        if (loadingElement) loadingElement.classList.add('active');
-    }
-
-    function hideLoading(type) {
-        const loadingElement = document.getElementById(`loading-${type}`);
-        if (loadingElement) loadingElement.classList.remove('active');
-    }
-
-    function showError(field, message) {
-        const errorElement = document.getElementById(`error-${field}`);
-        if (errorElement) {
-            errorElement.textContent = message;
-            errorElement.classList.remove('hidden');
-        }
-    }
-
-    function hideError(field) {
-        const errorElement = document.getElementById(`error-${field}`);
-        if (errorElement) errorElement.classList.add('hidden');
-    }
-
-    function validateDropdowns() {
-        let isValid = true;
-        const dropdowns = ['akun', 'kelompok', 'jenis', 'objek', 'rincian_objek', 'sub_rincian_objek',
-            'sub_sub_rincian_objek'
-        ];
-
-        dropdowns.forEach(dropdownId => {
-            const select = document.getElementById(dropdownId);
-            if (select && !select.value) {
-                const fieldName = dropdownId.replace(/_/g, '-');
-                showError(fieldName, 'Field ini wajib diisi');
-                isValid = false;
-            }
-        });
-
-        return isValid;
-    }
-
-    function updateKodeBarang() {
-        const keadaanBarangSelect = document.querySelector('select[name="keadaan_barang"]');
-
-        if (keadaanBarangSelect && keadaanBarangSelect.value === 'RB') {
-            handleKeadaanBarangChange('RB');
-            return;
-        }
-
-        if (selectedHierarchy.akun && selectedHierarchy.kelompok && selectedHierarchy.jenis &&
-            selectedHierarchy.objek && selectedHierarchy.rincianObjek &&
-            selectedHierarchy.subRincianObjek && selectedHierarchy.subSubRincianObjek) {
-
-            const kodeBarang = generateKodeFromHierarchy();
-
-            if (kodeBarang) {
-                document.getElementById('kode-barang-text').textContent = kodeBarang;
-                document.getElementById('kode_barang').value = kodeBarang;
-                document.getElementById('kode-preview').style.display = 'block';
-            }
-        } else {
-            const existingKode = "{{ old('kode_barang', $aset->kode_barang) }}";
-            if (existingKode) {
-                document.getElementById('kode-barang-text').textContent = existingKode;
-                document.getElementById('kode_barang').value = existingKode;
-                document.getElementById('kode-preview').style.display = 'block';
-            } else {
-                hideKodePreview();
-            }
-        }
-    }
-
-    function generateKodeFromHierarchy() {
-        try {
-            if (!selectedHierarchy.subSubRincianObjek?.kode) {
-                return null;
-            }
-
-            let kode = selectedHierarchy.subSubRincianObjek.kode;
-            return kode;
-
-        } catch (error) {
-            console.error('Error generating kode barang:', error);
-            return null;
-        }
-    }
-
-    function hideKodePreview() {
-        const preview = document.getElementById('kode-preview');
-        const kodeInput = document.getElementById('kode_barang');
-        if (preview) preview.style.display = 'none';
-        if (kodeInput) kodeInput.value = '';
-    }
-
-    function updateHierarchyDisplay() {
-        const hierarchyDisplay = document.getElementById('hierarchy-display');
-        const hierarchyContent = document.getElementById('hierarchy-content');
-
-        if (!hierarchyDisplay || !hierarchyContent) return;
-
-        let content = '';
-
-        if (selectedHierarchy.akun) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Akun:</span> <span class="text-gray-700">${selectedHierarchy.akun.nama}</span></div>`;
-        }
-        if (selectedHierarchy.kelompok) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Kelompok:</span> <span class="text-gray-700">${selectedHierarchy.kelompok.nama}</span></div>`;
-        }
-        if (selectedHierarchy.jenis) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Jenis:</span> <span class="text-gray-700">${selectedHierarchy.jenis.nama}</span></div>`;
-        }
-        if (selectedHierarchy.objek) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Objek:</span> <span class="text-gray-700">${selectedHierarchy.objek.nama}</span></div>`;
-        }
-        if (selectedHierarchy.rincianObjek) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Rincian Objek:</span> <span class="text-gray-700">${selectedHierarchy.rincianObjek.nama}</span></div>`;
-        }
-        if (selectedHierarchy.subRincianObjek) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Sub Rincian Objek:</span> <span class="text-gray-700">${selectedHierarchy.subRincianObjek.nama}</span></div>`;
-        }
-        if (selectedHierarchy.subSubRincianObjek) {
-            content +=
-                `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Sub Sub Rincian:</span> <span class="text-gray-700">${selectedHierarchy.subSubRincianObjek.nama}</span></div>`;
-        }
-
-        if (content) {
-            hierarchyContent.innerHTML = content;
-            hierarchyDisplay.style.display = 'block';
-        } else {
-            hierarchyDisplay.style.display = 'none';
-        }
-    }
-
-    function handleKeadaanBarangChange(keadaanBarang) {
-        const kodeBarangDisplay = document.getElementById('kode-barang-text');
-        const kodeBarangInput = document.getElementById('kode_barang');
-        const kodePreview = document.getElementById('kode-preview');
-
-        if (keadaanBarang === 'RB') {
-            const kodeRusakBerat = '1.5.4.01.01.01.005';
-
+            // ⚠️ Jika bukan RB, kembalikan ke kode locked
             if (kodeBarangDisplay) {
-                kodeBarangDisplay.textContent = kodeRusakBerat;
-                kodeBarangDisplay.classList.remove('text-green-700');
-                kodeBarangDisplay.classList.add('text-red-700');
+                kodeBarangDisplay.textContent = LOCKED_KODE_BARANG;
+                kodeBarangDisplay.classList.remove('text-red-700');
+                kodeBarangDisplay.classList.add('text-green-700');
             }
 
             if (kodeBarangInput) {
-                kodeBarangInput.value = kodeRusakBerat;
-            }
-
-            if (kodePreview) {
-                kodePreview.style.display = 'block';
-                kodePreview.classList.remove('from-green-50', 'to-emerald-50', 'border-green-300');
-                kodePreview.classList.add('from-red-50', 'to-rose-50', 'border-red-300');
-
-                const icon = kodePreview.querySelector('svg');
-                if (icon) {
-                    icon.classList.remove('text-green-600');
-                    icon.classList.add('text-red-600');
-                }
-            }
-
-            showRusakBeratWarning();
-
-        } else if (keadaanBarang === 'B' || keadaanBarang === 'KB') {
-            updateKodeBarang();
-
-            if (kodeBarangDisplay) {
-                kodeBarangDisplay.classList.remove('text-red-700');
-                kodeBarangDisplay.classList.add('text-green-700');
+                kodeBarangInput.value = LOCKED_KODE_BARANG;
             }
 
             if (kodePreview) {
@@ -1392,41 +686,95 @@
 
             hideRusakBeratWarning();
         }
-    }
 
-    function showRusakBeratWarning() {
-        hideRusakBeratWarning();
+        // ===================================
+        // WARNING MANAGEMENT
+        // ===================================
+        function showRusakBeratWarning() {
+            hideRusakBeratWarning();
 
-        const kodePreview = document.getElementById('kode-preview');
-        if (kodePreview) {
-            const warningDiv = document.createElement('div');
-            warningDiv.id = 'rusak-berat-warning';
-            warningDiv.className = 'bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4';
-            warningDiv.innerHTML = `
-                    <div class="flex items-start space-x-3">
-                        <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                        </svg>
-                        <div>
-                            <strong class="text-yellow-900">Perhatian:</strong>
-                            <p class="text-yellow-800 text-sm mt-1">Aset dengan keadaan "Rusak Berat" akan menggunakan kode barang khusus dan akan diurutkan di bagian paling bawah daftar aset.</p>
-                        </div>
+            const kodePreview = document.getElementById('kode-preview');
+            if (kodePreview) {
+                const warningDiv = document.createElement('div');
+                warningDiv.id = 'rusak-berat-warning';
+                warningDiv.className = 'bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4';
+                warningDiv.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        <strong class="text-yellow-900">Perhatian:</strong>
+                        <p class="text-yellow-800 text-sm mt-1">Aset dengan keadaan "Rusak Berat" akan menggunakan kode barang khusus <strong>${KODE_RUSAK_BERAT}</strong> dan akan diurutkan di bagian paling bawah daftar aset.</p>
                     </div>
-                `;
+                </div>
+            `;
 
-            kodePreview.parentNode.insertBefore(warningDiv, kodePreview.nextSibling);
+                kodePreview.parentNode.insertBefore(warningDiv, kodePreview.nextSibling);
+            }
         }
-    }
 
-    function hideRusakBeratWarning() {
-        const existingWarning = document.getElementById('rusak-berat-warning');
-        if (existingWarning) {
-            existingWarning.remove();
+        function hideRusakBeratWarning() {
+            const existingWarning = document.getElementById('rusak-berat-warning');
+            if (existingWarning) {
+                existingWarning.remove();
+            }
         }
-    }
 
-    function goBack() {
-        window.history.back();
-    }
-</script>
+        // ===================================
+        // HIERARCHY DISPLAY
+        // ===================================
+        function updateHierarchyDisplay() {
+            const hierarchyDisplay = document.getElementById('hierarchy-display');
+            const hierarchyContent = document.getElementById('hierarchy-content');
+
+            if (!hierarchyDisplay || !hierarchyContent) return;
+
+            let content = '';
+
+            if (selectedHierarchy.akun) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Akun:</span> <span class="text-gray-700">${selectedHierarchy.akun.nama}</span></div>`;
+            }
+            if (selectedHierarchy.kelompok) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Kelompok:</span> <span class="text-gray-700">${selectedHierarchy.kelompok.nama}</span></div>`;
+            }
+            if (selectedHierarchy.jenis) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Jenis:</span> <span class="text-gray-700">${selectedHierarchy.jenis.nama}</span></div>`;
+            }
+            if (selectedHierarchy.objek) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Objek:</span> <span class="text-gray-700">${selectedHierarchy.objek.nama}</span></div>`;
+            }
+            if (selectedHierarchy.rincianObjek) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Rincian Objek:</span> <span class="text-gray-700">${selectedHierarchy.rincianObjek.nama}</span></div>`;
+            }
+            if (selectedHierarchy.subRincianObjek) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Sub Rincian Objek:</span> <span class="text-gray-700">${selectedHierarchy.subRincianObjek.nama}</span></div>`;
+            }
+            if (selectedHierarchy.subSubRincianObjek) {
+                content +=
+                    `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500 shadow-sm"><span class="font-semibold text-blue-700">Sub Sub Rincian:</span> <span class="text-gray-700">${selectedHierarchy.subSubRincianObjek.nama}</span></div>`;
+            }
+
+            if (content) {
+                hierarchyContent.innerHTML = content;
+                hierarchyDisplay.style.display = 'block';
+            } else {
+                hierarchyDisplay.style.display = 'none';
+            }
+        }
+
+        // ===================================
+        // VALIDATION
+        // ===================================
+        function validateDropdowns() {
+            // Semua field hierarki sudah terisi via hidden input
+            return true;
+        }
+    </script>
 @endpush

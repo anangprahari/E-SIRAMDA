@@ -6,6 +6,7 @@ use App\Models\Aset;
 use App\Repositories\AsetRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AsetService
 {
@@ -63,6 +64,11 @@ class AsetService
 
     /**
      * Update aset
+     * 
+     * ⚠️ KEBIJAKAN: 
+     * - Hierarki LOCKED (tidak bisa berubah)
+     * - Kode barang LOCKED (tidak bisa berubah via hierarki)
+     * - EXCEPTION: Jika status = RB, kode otomatis jadi kode RB
      */
     public function update(Aset $aset, array $validatedData, $buktiBarangFile, $buktiBeritaFile): array
     {
@@ -76,13 +82,32 @@ class AsetService
                 $aset->id
             );
 
-            // Tentukan kode barang final
-            $finalKodeBarang = $this->kodeService->determineFinalKodeBarang(
-                $validatedData['kode_barang'],
-                $validatedData['keadaan_barang']
-            );
+            // ⚠️ EXCEPTION: Jika status berubah ke RB, izinkan kode berubah
+            if ($validatedData['keadaan_barang'] === 'RB') {
+                $finalKodeBarang = $this->kodeService->generateKodeBarangRusakBerat();
 
-            // Prepare update data
+                Log::info('Kode barang changed to RB category during edit', [
+                    'aset_id' => $aset->id,
+                    'old_kode' => $aset->kode_barang,
+                    'new_kode' => $finalKodeBarang,
+                    'keadaan_barang' => 'RB'
+                ]);
+            } else {
+                // ⚠️ Selain RB: LOCKED - gunakan kode lama
+                $finalKodeBarang = $aset->kode_barang;
+
+                // Log jika ada attempt perubahan kode via hierarki
+                if (isset($validatedData['kode_barang']) && $validatedData['kode_barang'] !== $finalKodeBarang) {
+                    Log::warning('Attempt to change kode_barang via hierarchy blocked', [
+                        'aset_id' => $aset->id,
+                        'original_kode' => $finalKodeBarang,
+                        'attempted_kode' => $validatedData['kode_barang'],
+                        'user_id' => Auth::id() ?? 'system'
+                    ]);
+                }
+            }
+
+            // Prepare update data dengan kode barang yang sudah ditentukan
             $updateData = $this->prepareUpdateData($validatedData, $files, $finalKodeBarang);
 
             // Update aset
@@ -92,12 +117,17 @@ class AsetService
                 throw new \Exception('Gagal mengupdate data aset');
             }
 
-            Log::info('Asset updated successfully', ['aset_id' => $aset->id]);
+            Log::info('Asset updated successfully', [
+                'aset_id' => $aset->id,
+                'kode_barang' => $finalKodeBarang,
+                'kode_changed' => ($finalKodeBarang !== $aset->kode_barang)
+            ]);
 
             return [
                 'final_kode_barang' => $finalKodeBarang,
                 'keadaan_barang' => $validatedData['keadaan_barang'],
-                'original_kode_barang' => $validatedData['kode_barang']
+                'original_kode_barang' => $aset->kode_barang,
+                'kode_changed' => ($finalKodeBarang !== $aset->kode_barang)
             ];
         });
     }
@@ -204,7 +234,8 @@ class AsetService
     {
         $message = 'Aset berhasil diperbarui';
 
-        if ($result['keadaan_barang'] === 'RB' && $result['final_kode_barang'] !== $result['original_kode_barang']) {
+        // Tambahkan info jika kode berubah karena RB
+        if ($result['kode_changed'] && $result['keadaan_barang'] === 'RB') {
             $message .= ". Kode barang telah diubah ke kategori Rusak Berat: {$result['final_kode_barang']}";
         }
 

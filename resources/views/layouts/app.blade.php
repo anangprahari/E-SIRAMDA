@@ -58,9 +58,11 @@
         </div>
     </div>
 
-    {{-- Toast Notification (Global) --}}
+    {{-- Global Notifications --}}
     <x-notifications.toast />
-    
+    <x-notifications.confirm-modal />
+    <x-notifications.notifier />
+
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @stack('page-scripts')
 

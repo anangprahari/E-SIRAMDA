@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class Aset extends Model
 {
@@ -137,13 +138,34 @@ class Aset extends Model
 
     public function getBuktiBarangUrlAttribute()
     {
-        return $this->bukti_barang ? asset('storage/bukti_barang/' . $this->bukti_barang) : null;
+        if (!$this->bukti_barang) {
+            return null;
+        }
+
+        $path = 'bukti_barang/' . $this->bukti_barang;
+
+        if (!Storage::disk('public')->exists($path)) {
+            return null;
+        }
+
+        return asset('storage/' . $path);
     }
 
     public function getBuktiBeritaUrlAttribute()
     {
-        return $this->bukti_berita ? asset('storage/bukti_berita/' . $this->bukti_berita) : null;
+        if (!$this->bukti_berita) {
+            return null;
+        }
+
+        $path = 'bukti_berita/' . $this->bukti_berita;
+
+        if (!Storage::disk('public')->exists($path)) {
+            return null;
+        }
+
+        return asset('storage/' . $path);
     }
+
 
     public function getFormattedHargaAttribute()
     {

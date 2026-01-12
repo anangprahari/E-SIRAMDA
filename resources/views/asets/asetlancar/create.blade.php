@@ -419,9 +419,10 @@
 
             // Form submission handler
             const form = document.getElementById('asetLancarForm');
+
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    e.preventDefault(); // ✅ Prevent default
+                    e.preventDefault();
 
                     const saldoAwalUnit = parseFloat(document.getElementById('saldo_awal_unit').value) || 0;
                     const saldoAwalHargaSatuan = parseFloat(document.getElementById(
@@ -433,44 +434,43 @@
                     const mutasiKurangUnit = parseFloat(document.getElementById('mutasi_kurang_unit')
                         .value) || 0;
 
-                    // Validasi
-                    if (saldoAwalHargaSatuan == 0 && mutasiTambahHargaSatuan == 0) {
-                        alert('⚠️ Harga satuan harus diisi, baik di Saldo Awal atau Mutasi Tambah.');
+                    // ✅ VALIDASI DENGAN TOAST
+                    if (saldoAwalHargaSatuan === 0 && mutasiTambahHargaSatuan === 0) {
+                        notify.error('Harga satuan wajib diisi pada Saldo Awal atau Mutasi Tambah.');
                         return;
                     }
 
-                    if (saldoAwalUnit > 0 && saldoAwalHargaSatuan == 0) {
-                        alert('⚠️ Jika ada unit saldo awal, harga satuan saldo awal harus diisi.');
+                    if (saldoAwalUnit > 0 && saldoAwalHargaSatuan === 0) {
+                        notify.error(
+                            'Harga satuan saldo awal wajib diisi jika unit saldo awal lebih dari 0.');
                         return;
                     }
 
-                    if (mutasiTambahUnit > 0 && mutasiTambahHargaSatuan == 0) {
-                        alert('⚠️ Jika ada unit mutasi tambah, harga satuan mutasi tambah harus diisi.');
+                    if (mutasiTambahUnit > 0 && mutasiTambahHargaSatuan === 0) {
+                        notify.error(
+                            'Harga satuan mutasi tambah wajib diisi jika unit mutasi tambah lebih dari 0.'
+                            );
                         return;
                     }
 
                     const totalUnit = saldoAwalUnit + mutasiTambahUnit - mutasiKurangUnit;
                     if (totalUnit < 0) {
-                        alert(
-                            '⚠️ Saldo Akhir Unit tidak boleh negatif. Silakan periksa kembali data mutasi Anda.');
+                        notify.error('Saldo akhir unit tidak boleh negatif.');
                         return;
                     }
 
-                    // ✅ Tampilkan confirm modal
-                    const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
-
-                    modal.show({
+                    // ✅ KONFIRMASI DENGAN MODAL
+                    notify.confirm({
                         title: 'Simpan Aset Lancar',
                         message: 'Apakah Anda yakin ingin menyimpan data aset lancar ini?',
                         confirmText: 'Ya, Simpan',
                         cancelText: 'Batal',
                         type: 'info',
-                        onConfirm: () => {
-                            form.submit(); // ✅ Submit setelah konfirmasi
-                        }
+                        onConfirm: () => form.submit()
                     });
                 });
             }
+
 
             // Reset form handler
             const resetButton = document.querySelector('button[type="reset"]');

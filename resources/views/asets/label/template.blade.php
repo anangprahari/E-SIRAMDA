@@ -73,12 +73,51 @@
             height: 35px;
         }
 
+        /* ============================= */
+        /* LOGO CELL */
+        /* ============================= */
+        .logo-cell {
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        /* ============================= */
+        /* BASE LOGO */
+        /* ============================= */
         .logo {
-            max-width: 95px;
-            height: auto;
             display: block;
             margin: 0 auto;
+            object-fit: contain;
         }
+
+        /* ============================= */
+        /* LOGO PEMPROV (VERTIKAL, DETAIL) */
+        /* ============================= */
+        .logo-left {
+            height: 150px;
+            /* kunci tinggi visual */
+            max-height: 150px;
+            width: auto;
+        }
+
+        /* ============================= */
+        /* LOGO KOMINFO (KECIL & KOMPAK) */
+        /* ============================= */
+        .logo-right {
+            height: 150px;
+            /* DIPERBESAR secara paksa */
+            max-height: 150px;
+            width: auto;
+        }
+
+        /* ============================= */
+        /* RESPONSIF AMAN BROWSERSHOT */
+        /* ============================= */
+        .logo-left-cell,
+        .logo-right-cell {
+            text-align: center;
+        }
+
 
         .title {
             font-size: 18px;
@@ -113,15 +152,15 @@
 
             <!-- HEADER -->
             <tr class="hdr">
-                <td rowspan="3">
-                    <img src="{{ $logo_pemprov_path }}" class="logo">
+                <td rowspan="3" class="logo-cell logo-left-cell">
+                    <img src="{{ $logo_pemprov_path }}" class="logo logo-left">
                 </td>
                 <td colspan="2" class="title">
                     BARANG MILIK PEMERINTAH<br>
                     PROVINSI JAMBI
                 </td>
-                <td rowspan="3">
-                    <img src="{{ $logo_kominfo_path }}" class="logo">
+                <td rowspan="3" class="logo-cell logo-right-cell">
+                    <img src="{{ $logo_kominfo_path }}" class="logo logo-right">
                 </td>
             </tr>
 

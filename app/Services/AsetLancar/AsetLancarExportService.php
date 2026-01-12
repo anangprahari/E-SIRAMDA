@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AsetLancarExportService
 {
@@ -18,9 +19,13 @@ class AsetLancarExportService
     /**
      * Export AsetLancar data to Excel.
      */
-    public function export(array $filters): void
+    public function export(array $filters): StreamedResponse
     {
         $asetLancars = $this->repository->getAllFiltered($filters);
+
+        if ($asetLancars->count() === 0) {
+            throw new \Exception('Tidak ada data aset lancar untuk diekspor.');
+        }
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -33,7 +38,14 @@ class AsetLancarExportService
 
         $this->applyFormatting($sheet, count($asetLancars));
 
-        $this->outputExcel($spreadsheet);
+        $filename = 'aset_lancar_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     /**
@@ -213,21 +225,5 @@ class AsetLancarExportService
             ->getNumberFormat()->setFormatCode('#,##0');
         $sheet->getStyle("M6:M{$lastRow}")
             ->getNumberFormat()->setFormatCode('#,##0');
-    }
-
-    /**
-     * Output Excel file to browser.
-     */
-    protected function outputExcel(Spreadsheet $spreadsheet): void
-    {
-        $writer = new Xlsx($spreadsheet);
-        $filename = 'aset_lancar_' . date('Y-m-d_H-i-s') . '.xlsx';
-
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-
-        $writer->save('php://output');
-        exit;
     }
 }

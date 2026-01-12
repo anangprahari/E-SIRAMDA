@@ -105,8 +105,15 @@ class AsetLancarController extends Controller
      */
     public function export(Request $request)
     {
-        $this->exportService->export($request->all());
+        try {
+            return $this->exportService->export($request->all());
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
     }
+
+
 
     /**
      * Get rekening uraian data for AJAX.
