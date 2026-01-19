@@ -91,6 +91,9 @@
                             </option>
                         @endforeach
                     </select>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Total aset ditampilkan: {{ $assets->count() }}
+                    </p>
                     @error('aset_id')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror

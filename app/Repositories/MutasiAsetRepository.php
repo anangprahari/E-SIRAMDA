@@ -67,9 +67,17 @@ class MutasiAsetRepository
     public function getAvailableAssets(): Collection
     {
         return Aset::whereNotNull('ruangan')
-            ->orderBy('nama_jenis_barang')
-            ->get(['id', 'kode_barang', 'nama_jenis_barang', 'register', 'ruangan']);
+            ->orderBy('kode_barang', 'asc')
+            ->orderBy('register', 'asc')
+            ->get([
+                'id',
+                'kode_barang',
+                'nama_jenis_barang',
+                'register',
+                'ruangan'
+            ]);
     }
+
 
     /**
      * Apply filters to query
