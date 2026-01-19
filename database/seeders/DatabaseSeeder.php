@@ -20,9 +20,5 @@ class DatabaseSeeder extends Seeder
             JenisSeeder::class,
             ObjekSeeder::class
         ]);
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }
