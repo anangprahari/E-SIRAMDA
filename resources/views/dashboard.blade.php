@@ -142,177 +142,110 @@
         </div>
 
         {{-- ========================================
-            3. GRAFIK KONDISI ASET TETAP
+            3. GRAFIK KONDISI ASET & PERINGATAN - LAYOUT BARU (2 KOLOM)
         ======================================== --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-bold text-gray-800">Kondisi Aset Tetap</h3>
-                <span class="text-xs text-gray-500">{{ number_format($totalAsetTetap) }} unit</span>
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <div class="flex flex-col items-center justify-center py-2">
-                {{-- Donut Chart --}}
-                <div class="relative w-48 h-48">
-                    <svg class="transform -rotate-90" viewBox="0 0 120 120">
-                        <circle cx="60" cy="60" r="54" fill="none" stroke="#f3f4f6" stroke-width="12" />
-                        @php
-                            $total = $kondisiAsetData['B'] + $kondisiAsetData['KB'] + $kondisiAsetData['RB'];
-                            $circumference = 2 * 3.14159 * 54;
-                            $offset = 0;
-                        @endphp
-                        @if ($total > 0)
-                            @php
-                                $baik_persen = $kondisiAsetData['B'] / $total;
-                                $baik_length = $baik_persen * $circumference;
-                            @endphp
-                            <circle cx="60" cy="60" r="54" fill="none" stroke="#10b981" stroke-width="12"
-                                stroke-dasharray="{{ $baik_length }} {{ $circumference }}"
-                                stroke-dashoffset="{{ -$offset }}" class="transition-all duration-500" />
-                            @php $offset += $baik_length; @endphp
-                        @endif
-                        @if ($total > 0 && $kondisiAsetData['KB'] > 0)
-                            @php
-                                $kb_persen = $kondisiAsetData['KB'] / $total;
-                                $kb_length = $kb_persen * $circumference;
-                            @endphp
-                            <circle cx="60" cy="60" r="54" fill="none" stroke="#f59e0b"
-                                stroke-width="12" stroke-dasharray="{{ $kb_length }} {{ $circumference }}"
-                                stroke-dashoffset="{{ -$offset }}" class="transition-all duration-500" />
-                            @php $offset += $kb_length; @endphp
-                        @endif
-                        @if ($total > 0 && $kondisiAsetData['RB'] > 0)
-                            @php
-                                $rb_persen = $kondisiAsetData['RB'] / $total;
-                                $rb_length = $rb_persen * $circumference;
-                            @endphp
-                            <circle cx="60" cy="60" r="54" fill="none" stroke="#ef4444"
-                                stroke-width="12" stroke-dasharray="{{ $rb_length }} {{ $circumference }}"
-                                stroke-dashoffset="{{ -$offset }}" class="transition-all duration-500" />
-                        @endif
-                    </svg>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center">
-                            <p class="text-2xl font-bold text-gray-800">
-                                {{ $total > 0 ? number_format($persentaseKondisi['B'], 0) : 0 }}%</p>
-                            <p class="text-xs text-gray-500">Kondisi Baik</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Legend --}}
-                <div class="mt-4 space-y-2 w-full">
-                    <div
-                        class="flex items-center justify-between px-3 py-2 bg-green-50 rounded-lg border border-green-100">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                            <span class="text-xs font-medium text-gray-700">Baik (B)</span>
-                        </div>
-                        <div class="text-right">
-                            <span
-                                class="text-sm font-bold text-gray-800">{{ number_format($kondisiAsetData['B']) }}</span>
-                            <span class="text-xs text-gray-500 ml-1">({{ $persentaseKondisi['B'] }}%)</span>
-                        </div>
-                    </div>
-                    <div
-                        class="flex items-center justify-between px-3 py-2 bg-amber-50 rounded-lg border border-amber-100">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2.5 h-2.5 bg-amber-500 rounded-full"></div>
-                            <span class="text-xs font-medium text-gray-700">Kurang Baik (KB)</span>
-                        </div>
-                        <div class="text-right">
-                            <span
-                                class="text-sm font-bold text-gray-800">{{ number_format($kondisiAsetData['KB']) }}</span>
-                            <span class="text-xs text-gray-500 ml-1">({{ $persentaseKondisi['KB'] }}%)</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between px-3 py-2 bg-red-50 rounded-lg border border-red-100">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-                            <span class="text-xs font-medium text-gray-700">Rusak Berat (RB)</span>
-                        </div>
-                        <div class="text-right">
-                            <span
-                                class="text-sm font-bold text-gray-800">{{ number_format($kondisiAsetData['RB']) }}</span>
-                            <span class="text-xs text-gray-500 ml-1">({{ $persentaseKondisi['RB'] }}%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- ========================================
-            4. MUTASI TERBARU & WARNING
-        ======================================== --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            {{-- Mutasi Terbaru (2 kolom) --}}
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            {{-- KONDISI ASET TETAP (Kolom Kiri) --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-base font-bold text-gray-800">Mutasi Terbaru</h3>
-                    <a href="{{ route('mutasi.index') }}"
-                        class="text-xs text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1">
-                        Lihat Semua
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                            </path>
-                        </svg>
-                    </a>
+                    <h3 class="text-base font-bold text-gray-800">Kondisi Aset Tetap</h3>
+                    <span class="text-xs text-gray-500">{{ number_format($totalAsetTetap) }} unit</span>
                 </div>
 
-                @if ($mutasiTerbaru->count() > 0)
-                    <div class="space-y-2.5">
-                        @foreach ($mutasiTerbaru as $mutasi)
-                            <div
-                                class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 border border-gray-100">
-                                <div class="flex-shrink-0 mt-0.5">
-                                    <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex-1">
-                                            <p class="text-sm font-semibold text-gray-900 truncate">
-                                                {{ $mutasi->aset->nama_jenis_barang }}</p>
-                                            <p class="text-xs text-gray-500 mt-0.5">{{ $mutasi->aset->kode_barang }} -
-                                                Reg: {{ $mutasi->aset->register }}</p>
-                                        </div>
-                                        <span
-                                            class="text-xs text-gray-400 ml-3">{{ $mutasi->tanggal_mutasi->format('d/m/Y') }}</span>
-                                    </div>
-                                    <div class="mt-1.5 flex items-center text-xs">
-                                        <span
-                                            class="px-2 py-0.5 bg-red-100 text-red-700 rounded">{{ $mutasi->ruangan_asal }}</span>
-                                        <svg class="w-3.5 h-3.5 mx-1.5 text-gray-400" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                        </svg>
-                                        <span
-                                            class="px-2 py-0.5 bg-green-100 text-green-700 rounded">{{ $mutasi->ruangan_tujuan }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-center py-8">
-                        <svg class="w-12 h-12 mx-auto text-gray-300" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
-                            </path>
+                <div class="flex flex-col items-center justify-center py-2">
+                    {{-- Donut Chart --}}
+                    <div class="relative w-48 h-48">
+                        <svg class="transform -rotate-90" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="#f3f4f6"
+                                stroke-width="12" />
+                            @php
+                                $total = $kondisiAsetData['B'] + $kondisiAsetData['KB'] + $kondisiAsetData['RB'];
+                                $circumference = 2 * 3.14159 * 54;
+                                $offset = 0;
+                            @endphp
+                            @if ($total > 0)
+                                @php
+                                    $baik_persen = $kondisiAsetData['B'] / $total;
+                                    $baik_length = $baik_persen * $circumference;
+                                @endphp
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="#10b981"
+                                    stroke-width="12" stroke-dasharray="{{ $baik_length }} {{ $circumference }}"
+                                    stroke-dashoffset="{{ -$offset }}" class="transition-all duration-500" />
+                                @php $offset += $baik_length; @endphp
+                            @endif
+                            @if ($total > 0 && $kondisiAsetData['KB'] > 0)
+                                @php
+                                    $kb_persen = $kondisiAsetData['KB'] / $total;
+                                    $kb_length = $kb_persen * $circumference;
+                                @endphp
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="#f59e0b"
+                                    stroke-width="12" stroke-dasharray="{{ $kb_length }} {{ $circumference }}"
+                                    stroke-dashoffset="{{ -$offset }}" class="transition-all duration-500" />
+                                @php $offset += $kb_length; @endphp
+                            @endif
+                            @if ($total > 0 && $kondisiAsetData['RB'] > 0)
+                                @php
+                                    $rb_persen = $kondisiAsetData['RB'] / $total;
+                                    $rb_length = $rb_persen * $circumference;
+                                @endphp
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="#ef4444"
+                                    stroke-width="12" stroke-dasharray="{{ $rb_length }} {{ $circumference }}"
+                                    stroke-dashoffset="{{ -$offset }}" class="transition-all duration-500" />
+                            @endif
                         </svg>
-                        <p class="text-gray-500 mt-3 text-sm">Belum ada mutasi aset</p>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-gray-800">
+                                    {{ $total > 0 ? number_format($persentaseKondisi['B'], 0) : 0 }}%</p>
+                                <p class="text-xs text-gray-500">Kondisi Baik</p>
+                            </div>
+                        </div>
                     </div>
-                @endif
+
+                    {{-- Legend --}}
+                    <div class="mt-4 space-y-2 w-full">
+                        <div
+                            class="flex items-center justify-between px-3 py-2 bg-green-50 rounded-lg border border-green-100">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                                <span class="text-xs font-medium text-gray-700">Baik (B)</span>
+                            </div>
+                            <div class="text-right">
+                                <span
+                                    class="text-sm font-bold text-gray-800">{{ number_format($kondisiAsetData['B']) }}</span>
+                                <span class="text-xs text-gray-500 ml-1">({{ $persentaseKondisi['B'] }}%)</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center justify-between px-3 py-2 bg-amber-50 rounded-lg border border-amber-100">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2.5 h-2.5 bg-amber-500 rounded-full"></div>
+                                <span class="text-xs font-medium text-gray-700">Kurang Baik (KB)</span>
+                            </div>
+                            <div class="text-right">
+                                <span
+                                    class="text-sm font-bold text-gray-800">{{ number_format($kondisiAsetData['KB']) }}</span>
+                                <span class="text-xs text-gray-500 ml-1">({{ $persentaseKondisi['KB'] }}%)</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center justify-between px-3 py-2 bg-red-50 rounded-lg border border-red-100">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
+                                <span class="text-xs font-medium text-gray-700">Rusak Berat (RB)</span>
+                            </div>
+                            <div class="text-right">
+                                <span
+                                    class="text-sm font-bold text-gray-800">{{ number_format($kondisiAsetData['RB']) }}</span>
+                                <span class="text-xs text-gray-500 ml-1">({{ $persentaseKondisi['RB'] }}%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {{-- Warning & Alert (1 kolom) --}}
+            {{-- PERINGATAN ASET (Kolom Kanan) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                 <h3 class="text-base font-bold text-gray-800 mb-1">Peringatan Aset</h3>
                 <p class="text-xs text-gray-500 mb-4">Monitoring kondisi aset yang memerlukan perhatian</p>
@@ -355,6 +288,89 @@
                     </a>
                 </div>
             </div>
+        </div>
+
+        {{-- ========================================
+            4. MUTASI TERBARU - FULL WIDTH (DIPERBAIKI: TIDAK WRAP)
+        ======================================== --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-gray-800">Mutasi Terbaru</h3>
+                <a href="{{ route('mutasi.index') }}"
+                    class="text-xs text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1">
+                    Lihat Semua
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+
+            @if ($mutasiTerbaru->count() > 0)
+                <div class="space-y-2.5">
+                    @foreach ($mutasiTerbaru as $mutasi)
+                        <div
+                            class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 border border-gray-100">
+                            <div class="flex items-center gap-3">
+                                {{-- Icon --}}
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                {{-- Info Aset --}}
+                                <div class="flex-shrink-0" style="min-width: 250px;">
+                                    <p class="text-sm font-semibold text-gray-900 mb-1">
+                                        {{ $mutasi->aset->nama_jenis_barang }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        {{ $mutasi->aset->kode_barang }} - Reg: {{ $mutasi->aset->register }}
+                                    </p>
+                                </div>
+
+                                {{-- Flow Ruangan (Horizontal - No Wrap) --}}
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <span
+                                        class="px-3 py-1.5 bg-red-100 text-red-700 rounded text-xs font-medium whitespace-nowrap">
+                                        {{ $mutasi->ruangan_asal }}
+                                    </span>
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
+                                    <span
+                                        class="px-3 py-1.5 bg-green-100 text-green-700 rounded text-xs font-medium whitespace-nowrap">
+                                        {{ $mutasi->ruangan_tujuan }}
+                                    </span>
+                                </div>
+
+                                {{-- Tanggal --}}
+                                <div class="flex-shrink-0">
+                                    <span class="text-xs text-gray-400 whitespace-nowrap">
+                                        {{ $mutasi->tanggal_mutasi->format('d/m/Y') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-8">
+                    <svg class="w-12 h-12 mx-auto text-gray-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                        </path>
+                    </svg>
+                    <p class="text-gray-500 mt-3 text-sm">Belum ada mutasi aset</p>
+                </div>
+            @endif
         </div>
     </div>
 @endsection
