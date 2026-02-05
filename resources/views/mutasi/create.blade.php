@@ -19,7 +19,6 @@
         <div class="bg-white rounded-xl shadow border border-gray-200 p-6">
             <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" id="formMutasi">
                 @csrf
-
                 {{-- SECTION 1 : Informasi Surat --}}
                 <div class="mb-6">
                     <div class="mb-3">
@@ -189,6 +188,10 @@
                             file:bg-blue-600 file:text-white
                             hover:file:bg-blue-700"
                                 required>
+                            @error('berita_acara')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                            <small class="text-xs text-gray-500 mt-1 block">Format: PDF. Maksimal 10MB</small>
                         </div>
 
                         <div>
@@ -225,66 +228,182 @@
     <x-notifications.confirm-modal />
 @endsection
 @push('page-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Form submission handler dengan confirm modal
-        const formMutasi = document.getElementById('formMutasi');
-        if (formMutasi) {
-            formMutasi.addEventListener('submit', function(e) {
-                e.preventDefault(); // ✅ Prevent default submit
+        document.addEventListener('DOMContentLoaded', function() {
+            // ============================================
+            // VALIDASI ERROR DARI SERVER (SWEETALERT)
+            // ============================================
+            @if ($errors->any())
+                let errorMessages = '';
+                @foreach ($errors->all() as $error)
+                    errorMessages += '{{ $error }}\n';
+                @endforeach
 
-                // Validasi dasar
-                const asetId = document.getElementById('aset_id').value;
-                const nomorSurat = document.querySelector('input[name="nomor_surat"]').value;
-                const tanggalMutasi = document.querySelector('input[name="tanggal_mutasi"]').value;
-                const ruanganTujuan = document.querySelector('select[name="ruangan_tujuan"]').value;
-                const beritaAcara = document.querySelector('input[name="berita_acara"]').files.length;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: errorMessages,
+                    confirmButtonColor: '#3b82f6',
+                });
+            @endif
 
-                // Validasi field required
-                if (!asetId) {
-                    alert('⚠️ Silakan pilih aset yang akan dimutasi.');
-                    return;
-                }
+            // ============================================
+            // SHOW INFO ASET SAAT DIPILIH
+            // ============================================
+            const asetSelect = document.getElementById('aset_id');
+            const infoAset = document.getElementById('infoAset');
+            const textRuanganAsal = document.getElementById('textRuanganAsal');
+            const textLokasiAsal = document.getElementById('textLokasiAsal');
+            const textRegister = document.getElementById('textRegister');
 
-                if (!nomorSurat) {
-                    alert('⚠️ Nomor surat wajib diisi.');
-                    return;
-                }
+            if (asetSelect) {
+                asetSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
 
-                if (!tanggalMutasi) {
-                    alert('⚠️ Tanggal mutasi wajib diisi.');
-                    return;
-                }
+                    if (this.value) {
+                        const ruangan = selectedOption.dataset.ruangan || '-';
+                        const lokasi = selectedOption.dataset.lokasi || '-';
+                        const register = selectedOption.dataset.register || '-';
 
-                if (!ruanganTujuan) {
-                    alert('⚠️ Ruangan tujuan wajib dipilih.');
-                    return;
-                }
+                        textRuanganAsal.textContent = ruangan;
+                        textLokasiAsal.textContent = lokasi;
+                        textRegister.textContent = `No. Register: ${register}`;
 
-                if (beritaAcara === 0) {
-                    alert('⚠️ Berita acara (PDF) wajib diupload.');
-                    return;
-                }
-
-                // Ambil informasi aset
-                const selectedOption = document.querySelector('#aset_id option:checked');
-                const namaAset = selectedOption ? selectedOption.textContent.trim() : 'Aset terpilih';
-                const ruanganAsal = document.getElementById('textRuanganAsal') ?
-                    document.getElementById('textRuanganAsal').textContent.trim() : '-';
-
-                // ✅ Tampilkan confirm modal
-                const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
-
-                modal.show({
-                    title: 'Konfirmasi Mutasi Aset',
-                    message: `Apakah Anda yakin ingin memutasi aset berikut?\n\nAset: ${namaAset}\nDari: ${ruanganAsal}\nKe: ${ruanganTujuan}\n\nProses ini akan mencatat perpindahan aset secara permanen.`,
-                    confirmText: 'Ya, Mutasi Aset',
-                    cancelText: 'Batal',
-                    type: 'warning',
-                    onConfirm: () => {
-                        formMutasi.submit(); // ✅ Submit setelah konfirmasi
+                        infoAset.classList.remove('hidden');
+                    } else {
+                        infoAset.classList.add('hidden');
                     }
                 });
-            });
-        }
+
+                // Trigger change jika ada old value
+                if (asetSelect.value) {
+                    asetSelect.dispatchEvent(new Event('change'));
+                }
+            }
+
+            // ============================================
+            // FORM SUBMISSION DENGAN CONFIRM MODAL
+            // ============================================
+            const formMutasi = document.getElementById('formMutasi');
+            if (formMutasi) {
+                formMutasi.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent default submit
+
+                    // Validasi dasar
+                    const asetId = document.getElementById('aset_id').value;
+                    const nomorSurat = document.querySelector('input[name="nomor_surat"]').value;
+                    const tanggalMutasi = document.querySelector('input[name="tanggal_mutasi"]').value;
+                    const ruanganTujuan = document.querySelector('select[name="ruangan_tujuan"]').value;
+                    const beritaAcaraInput = document.querySelector('input[name="berita_acara"]');
+                    const beritaAcara = beritaAcaraInput.files.length;
+
+                    // Validasi field required
+                    if (!asetId) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Silakan pilih aset yang akan dimutasi.',
+                            confirmButtonColor: '#3b82f6',
+                        });
+                        return;
+                    }
+
+                    if (!nomorSurat) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Nomor surat wajib diisi.',
+                            confirmButtonColor: '#3b82f6',
+                        });
+                        return;
+                    }
+
+                    if (!tanggalMutasi) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Tanggal mutasi wajib diisi.',
+                            confirmButtonColor: '#3b82f6',
+                        });
+                        return;
+                    }
+
+                    if (!ruanganTujuan) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Ruangan tujuan wajib dipilih.',
+                            confirmButtonColor: '#3b82f6',
+                        });
+                        return;
+                    }
+
+                    if (beritaAcara === 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Berita acara (PDF) wajib diupload.',
+                            confirmButtonColor: '#3b82f6',
+                        });
+                        return;
+                    }
+
+                    // ============================================
+                    // VALIDASI FILE BERITA ACARA
+                    // ============================================
+                    if (beritaAcara > 0) {
+                        const file = beritaAcaraInput.files[0];
+                        const fileSize = file.size / 1024; // KB
+                        const fileSizeMB = fileSize / 1024; // MB
+                        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+                        // Validasi format file
+                        if (fileExtension !== 'pdf') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Format File Salah',
+                                text: 'Berita acara harus berformat PDF.',
+                                confirmButtonColor: '#3b82f6',
+                            });
+                            beritaAcaraInput.value = ''; // Reset input
+                            return;
+                        }
+
+                        // Validasi ukuran file (max 10MB)
+                        if (fileSizeMB > 10) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Ukuran File Terlalu Besar',
+                                text: `Ukuran berita acara maksimal 10MB. File Anda: ${fileSizeMB.toFixed(2)}MB`,
+                                confirmButtonColor: '#3b82f6',
+                            });
+                            beritaAcaraInput.value = ''; // Reset input
+                            return;
+                        }
+                    }
+
+                    // Ambil informasi aset
+                    const selectedOption = document.querySelector('#aset_id option:checked');
+                    const namaAset = selectedOption ? selectedOption.textContent.trim() : 'Aset terpilih';
+                    const ruanganAsal = document.getElementById('textRuanganAsal') ?
+                        document.getElementById('textRuanganAsal').textContent.trim() : '-';
+
+                    // Tampilkan confirm modal
+                    const modal = Alpine.$data(document.querySelector('[x-data*="confirmModal"]'));
+
+                    modal.show({
+                        title: 'Konfirmasi Mutasi Aset',
+                        message: `Apakah Anda yakin ingin memutasi aset berikut?\n\nAset: ${namaAset}\nDari: ${ruanganAsal}\nKe: ${ruanganTujuan}\n\nProses ini akan mencatat perpindahan aset secara permanen.`,
+                        confirmText: 'Ya, Mutasi Aset',
+                        cancelText: 'Batal',
+                        type: 'warning',
+                        onConfirm: () => {
+                            formMutasi.submit();
+                        }
+                    });
+                });
+            }
+        });
     </script>
 @endpush

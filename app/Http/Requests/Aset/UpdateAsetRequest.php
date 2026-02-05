@@ -69,7 +69,7 @@ class UpdateAsetRequest extends FormRequest
             'keadaan_barang' => ['required', Rule::in(['B', 'KB', 'RB'])],
             'jumlah_barang' => 'required|integer|min:1|max:100',
             'harga_satuan' => 'required|numeric|min:0',
-            'bukti_barang' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bukti_barang' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'bukti_berita' => 'nullable|mimes:pdf|max:10240',
             'lokasi_barang' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',

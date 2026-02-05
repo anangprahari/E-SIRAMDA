@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\{JsonResponse, RedirectResponse};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class AsetController extends Controller
 {
@@ -67,15 +68,20 @@ class AsetController extends Controller
 
             $message = $this->asetService->generateStoreSuccessMessage($result);
 
-            return redirect()->route('asets.index')->with('success', $message);
-        } catch (\Exception $e) {
-            Log::error('Error creating aset: ' . $e->getMessage(), [
+            return redirect()
+                ->route('asets.index')
+                ->with('success', $message);
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            Log::error('Error creating aset', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
                 'request' => $request->except(['bukti_barang', 'bukti_berita']),
-                'trace' => $e->getTraceAsString()
             ]);
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menyimpan data aset: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan saat menyimpan data aset.')
                 ->withInput();
         }
     }
@@ -110,11 +116,6 @@ class AsetController extends Controller
      */
     public function update(UpdateAsetRequest $request, Aset $aset): RedirectResponse
     {
-        Log::info('Update request received', [
-            'aset_id' => $aset->id,
-            'request_data' => $request->except(['bukti_barang', 'bukti_berita'])
-        ]);
-
         try {
             $result = $this->asetService->update(
                 $aset,
@@ -125,20 +126,23 @@ class AsetController extends Controller
 
             $message = $this->asetService->generateUpdateSuccessMessage($result);
 
-            return redirect()->route('asets.index')->with('success', $message);
-        } catch (\Exception $e) {
+            return redirect()
+                ->route('asets.index')
+                ->with('success', $message);
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
             Log::error('Error updating aset', [
                 'aset_id' => $aset->id,
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memperbarui data aset: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan saat memperbarui data aset.')
                 ->withInput();
         }
     }
-
     /**
      * Remove the specified resource from storage.
      */

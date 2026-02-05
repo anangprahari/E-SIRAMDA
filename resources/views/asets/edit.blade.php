@@ -476,7 +476,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Bukti Barang</label>
                         <input type="file" name="bukti_barang" accept="image/jpeg,image/png,image/jpg,image/gif"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                        <small class="text-xs text-gray-500 mt-1 block">Format: JPG, PNG, GIF. Maksimal 2MB</small>
+                        <small class="text-xs text-gray-500 mt-1 block">Format: JPEG, JPG, PNG. Maksimal 2MB</small>
                         @if ($aset->bukti_barang_path)
                             <div class="mt-2">
                                 <small class="text-xs text-gray-500">File saat ini: <a
