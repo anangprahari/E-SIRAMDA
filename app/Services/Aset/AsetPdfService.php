@@ -2,11 +2,16 @@
 
 namespace App\Services\Aset;
 
-use App\Models\{Aset, SubSubRincianObjek};
+use App\Models\Aset;
+use App\Models\SubSubRincianObjek;
+use App\Services\Aset\AsetFileService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\PDF as DomPdf;
 use setasign\Fpdi\Tcpdf\Fpdi;
+
+
 
 class AsetPdfService
 {
@@ -35,7 +40,7 @@ class AsetPdfService
     /**
      * Generate PDF dengan informasi aset dan gambar
      */
-    private function generateAssetInfoPdf(Aset $aset): \Barryvdh\DomPDF\PDF
+    private function generateAssetInfoPdf(Aset $aset): DomPdf
     {
         // Check if bukti_barang image exists
         $imageBase64 = null;
