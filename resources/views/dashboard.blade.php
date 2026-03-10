@@ -25,10 +25,9 @@
                         </span>
                     </h1>
                     <p class="text-sm lg:text-base text-gray-600 leading-relaxed max-w-4xl">
-                        E-SIRAMDA merupakan sistem internal yang digunakan untuk pengelolaan inventaris
-                        Barang Milik Daerah secara terintegrasi. Sistem ini mendukung pencatatan aset,
-                        pengelolaan mutasi, serta penyusunan dan pencetakan laporan inventaris secara
-                        akurat dan tertib.
+                        E-SIRAMDA merupakan sistem internal yang digunakan untuk pengelolaan inventaris Barang Milik Daerah
+                        secara terintegrasi. Sistem ini mendukung pencatatan aset, pengelolaan mutasi, serta membantu proses
+                        penyusunan laporan inventaris secara akurat dan efisien.
                     </p>
                 </div>
             </div>
