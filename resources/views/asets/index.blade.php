@@ -19,6 +19,32 @@
 
                     {{-- Right : Actions --}}
                     <div class="flex flex-wrap items-center gap-2">
+
+                        {{-- FORM DOWNLOAD LABEL (Dipindah ke posisi pertama) --}}
+                        <form id="batch-label-form" action="{{ route('asets.downloadBatchLabel') }}" method="POST"
+                            class="inline-block">
+                            @csrf
+                            <button type="submit" id="batch-label-btn" disabled
+                                class="inline-flex items-center h-9 px-4
+            bg-white border border-sky-600 text-sky-700
+            rounded-lg text-sm font-medium
+            hover:bg-sky-600 hover:text-white
+            disabled:opacity-50 disabled:cursor-not-allowed
+            transition-all duration-300 shadow-sm">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" fill="none">
+                                    <path
+                                        d="M7 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2z" />
+                                    <path d="M12 7v6m0 0l2-2m-2 2l-2-2" />
+                                    <path d="M7 17h10" />
+                                </svg>
+
+                                <span id="batch-label-text">Download Label Terpilih</span>
+                            </button>
+                        </form>
+
+                        {{-- FORM EXPORT EXCEL (Dipindah ke posisi kedua) --}}
                         <form action="{{ route('asets.export') }}" method="GET" class="inline-block">
                             <input type="hidden" name="search" id="export_search" value="{{ request('search') }}">
                             <input type="hidden" name="tahun_perolehan" id="export_tahun_perolehan"
@@ -26,47 +52,33 @@
                             <input type="hidden" name="keadaan_barang" id="export_keadaan_barang"
                                 value="{{ request('keadaan_barang') }}">
                             <input type="hidden" name="ruangan" id="export_ruangan" value="{{ request('ruangan') }}">
+
                             <button type="submit"
                                 class="inline-flex items-center h-9 px-4
-           bg-white border border-green-600 text-green-700
-           rounded-lg text-sm font-medium
-           hover:bg-green-600 hover:text-white
-           transition-all duration-300 shadow-sm"
+            bg-white border border-green-600 text-green-700
+            rounded-lg text-sm font-medium
+            hover:bg-green-600 hover:text-white
+            transition-all duration-300 shadow-sm"
                                 id="exportFormBtn">
+
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" fill="none">
                                     <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-                                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z">
-                                    </path>
+                                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
                                 </svg>
+
                                 Export Excel
                             </button>
                         </form>
-                        <form id="batch-label-form" action="{{ route('asets.downloadBatchLabel') }}" method="POST"
-                            class="inline-block">
-                            @csrf
-                            <button type="submit" id="batch-label-btn" disabled
-                                class="inline-flex items-center h-9 px-4
-       bg-white border border-sky-600 text-sky-700
-       rounded-lg text-sm font-medium
-       hover:bg-sky-600 hover:text-white
-       disabled:opacity-50 disabled:cursor-not-allowed
-       transition-all duration-300 shadow-sm"
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" fill="none">
-                                <path d="M7 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2z" />
-                                <path d="M12 7v6m0 0l2-2m-2 2l-2-2" />
-                                <path d="M7 17h10" />
-                                </svg>
-                                <span id="batch-label-text">Download Label Terpilih</span>
-                            </button>
-                        </form>
+
+                        {{-- BUTTON TAMBAH ASET --}}
                         <a href="{{ route('asets.create') }}"
                             class="inline-flex items-center h-9 px-4
-                           bg-gradient-to-r from-blue-600 to-blue-700
-                           text-white rounded-lg text-sm font-medium
-                           hover:from-blue-700 hover:to-blue-800
-                           transition-all duration-300 shadow-md">
+        bg-gradient-to-r from-blue-600 to-blue-700
+        text-white rounded-lg text-sm font-medium
+        hover:from-blue-700 hover:to-blue-800
+        transition-all duration-300 shadow-md">
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="currentColor" fill="none">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -75,62 +87,9 @@
                             Tambah Aset Tetap & Lainnya
                         </a>
                     </div>
-
                 </div>
             </div>
         </div>
-
-        {{-- Success Alert --}}
-        {{-- @if (session('success'))
-            <div class="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <path d="M5 12l5 5l10 -10"></path>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-green-800">Berhasil!</h4>
-                    <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-green-600 hover:text-green-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif --}}
-
-        {{-- Error Alert --}}
-        {{-- @if (session('error'))
-            <div class="mb-6 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-lg shadow-md p-4 flex items-start animate-fade-in"
-                role="alert">
-                <div class="flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-600" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none">
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h4 class="text-sm font-bold text-red-800">Error!</h4>
-                    <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
-                </div>
-                <button type="button" class="ml-3 flex-shrink-0 text-red-600 hover:text-red-800"
-                    onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif --}}
 
         {{-- Filter Card --}}
         <div class="bg-white rounded-xl shadow-sm mb-4 border border-gray-200">
@@ -429,7 +388,7 @@
                                     {{ $aset->satuan }}</td>
                                 <td class="px-4 py-3 text-center whitespace-nowrap">
                                     <span
-                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold 
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
                                         {{ $aset->keadaan_barang === 'B'
                                             ? 'bg-green-100 text-green-800'
                                             : ($aset->keadaan_barang === 'KB'
