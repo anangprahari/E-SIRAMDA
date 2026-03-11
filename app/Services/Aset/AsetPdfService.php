@@ -80,37 +80,67 @@ class AsetPdfService
     private function mergePdfFiles(string $mainPdfContent, string $buktiBeritaPath): string
     {
         try {
+
             $fpdi = new Fpdi();
 
-            // Add pages from main PDF (asset info)
             $tempMainFile = tempnam(sys_get_temp_dir(), 'main_pdf_');
             file_put_contents($tempMainFile, $mainPdfContent);
 
+            /*
+        =========================
+        IMPORT PDF UTAMA
+        =========================
+        */
+
             $pageCount = $fpdi->setSourceFile($tempMainFile);
-            for ($pageNum = 1; $pageNum <= $pageCount; $pageNum++) {
-                $tpl = $fpdi->importPage($pageNum);
-                $fpdi->AddPage();
-                $fpdi->useTemplate($tpl);
+
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+
+                $template = $fpdi->importPage($pageNo);
+
+                $size = $fpdi->getTemplateSize($template);
+
+                $fpdi->AddPage(
+                    $size['orientation'],
+                    [$size['width'], $size['height']]
+                );
+
+                $fpdi->useTemplate($template);
             }
 
-            // Add pages from bukti_berita PDF
+            /*
+        =========================
+        IMPORT BUKTI BERITA
+        =========================
+        */
+
             if (file_exists($buktiBeritaPath)) {
+
                 $pageCount = $fpdi->setSourceFile($buktiBeritaPath);
-                for ($pageNum = 1; $pageNum <= $pageCount; $pageNum++) {
-                    $tpl = $fpdi->importPage($pageNum);
-                    $fpdi->AddPage();
-                    $fpdi->useTemplate($tpl);
+
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+
+                    $template = $fpdi->importPage($pageNo);
+
+                    $size = $fpdi->getTemplateSize($template);
+
+                    $fpdi->AddPage(
+                        $size['orientation'],
+                        [$size['width'], $size['height']]
+                    );
+
+                    $fpdi->useTemplate($template);
                 }
             }
 
-            // Clean up temp file
             unlink($tempMainFile);
 
-            return $fpdi->Output('', 'S'); // Return as string
-
+            return $fpdi->Output('', 'S');
         } catch (\Exception $e) {
-            Log::warning('Failed to merge PDF files, returning main PDF only: ' . $e->getMessage());
-            return $mainPdfContent; // Return main PDF if merge fails
+
+            Log::warning('Failed to merge PDF files: ' . $e->getMessage());
+
+            return $mainPdfContent;
         }
     }
 
