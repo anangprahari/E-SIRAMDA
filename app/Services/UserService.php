@@ -12,10 +12,12 @@ class UserService
     {
         return DB::transaction(function () use ($data) {
             return User::create([
-                'name' => $data['name'],
+                'name'     => $data['name'],
                 'username' => $data['username'],
-                'email' => $data['email'],
+                'email'    => $data['email'],
                 'password' => Hash::make($data['password']),
+                'role'     => 'user',
+                'status'   => 'aktif',
             ]);
         });
     }

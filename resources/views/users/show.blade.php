@@ -48,6 +48,24 @@
                             </div>
                         </div>
 
+                        {{-- Role --}}
+                        <div class="flex items-start gap-4 pb-4 border-b border-gray-100">
+                            <div class="flex-1">
+                                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Role</p>
+                                @if ($user->isSuperUser())
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                        Super User
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                        User
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         {{-- Username --}}
                         <div class="flex items-start gap-4 pb-4 border-b border-gray-100">
                             <div class="flex-1">
